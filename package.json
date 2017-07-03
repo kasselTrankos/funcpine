@@ -1,0 +1,24 @@
+{
+  "name": "funcpine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kasselTrankos/funcpine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kasselTrankos/funcpine/issues"
+  },
+  "homepage": "https://github.com/kasselTrankos/funcpine#readme",
+  "dependencies": {
+    "babelify": "^7.3.0",
+    "browserify": "^14.4.0"
+  }
+}
