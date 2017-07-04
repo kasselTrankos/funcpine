@@ -1,6 +1,10 @@
 var fs = require("fs");
 var browserify = require("browserify");
-browserify("lib/index.js")
-  .transform("babelify", {presets: ["es2015"]})
+browserify({entries: ["lib/index.js"], debug: true})
+  .transform("babelify", 
+  	{
+  		presets: ["es2015"],
+  		plugins: ["transform-object-rest-spread"]
+  	})
   .bundle()
   .pipe(fs.createWriteStream("app/js/bundle.js"));
