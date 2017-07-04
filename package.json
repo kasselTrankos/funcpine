@@ -26,6 +26,7 @@
     "babel-preset-es2016": "^6.24.1",
     "babelify": "^7.3.0",
     "babylon": "^6.17.4",
+    "bluebird": "^3.5.0",
     "browserify": "^14.4.0",
     "escodegen": "^1.8.1",
     "jsonfile": "^3.0.0"
