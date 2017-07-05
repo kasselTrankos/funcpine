@@ -1,2 +1,3 @@
 node_modules
+build.js
 app/js/bundle.js

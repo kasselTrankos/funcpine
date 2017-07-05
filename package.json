@@ -6,6 +6,7 @@
   "scripts": {
     "babel": "./node_modules/.bin/babel lib/index.js --out-file compiledes6.js",
     "start": "concurrently \"node es2016.js\"  \"node static_server.js\"",
+    "compile": "browserify -t vueify -e lib/index.js -o build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

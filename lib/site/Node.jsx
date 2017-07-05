@@ -1,8 +1,8 @@
-const Vue = require('vue');
+import Vue from 'vue';
 
-Vue.component('Home', {
+Vue.component('Node', {
     render (h) {
-	    //return (<p>{this.text}</p>);
+	    return (<p>{this.text}</p>);
   	},
 	props:{
 		text: {
@@ -10,6 +10,5 @@ Vue.component('Home', {
 	      required: true
 	    }
 	}
-
 });
 
