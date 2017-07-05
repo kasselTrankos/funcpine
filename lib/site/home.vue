@@ -14,7 +14,7 @@
 
 	  	</div>
   	</div>
-  	<node-map-search />
+  	<node-map-search v-on:inputChanged="refreshSearch"/>
 
   </div>
 </template>
@@ -46,6 +46,11 @@ module.exports = {
       		searched: false,
       		search: null
     	}
+  	},
+  	methods: {
+  		refreshSearch(value){
+  			console.log(' no data??????', value);
+  		}
   	}
 }
 </script>
