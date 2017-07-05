@@ -1,4 +1,5 @@
 var fs = require("fs"),
+  vueify = require('vueify'),
 	watchify = require('watchify');
 var browserify = require("browserify");
 var b = browserify({
@@ -8,9 +9,11 @@ var b = browserify({
 	cache: {},
   	debug: true,
   	packageCache: {},
-}).transform("babelify", {
-  	presets: ["es2016"],
-  	plugins: ['transform-object-rest-spread']
+})
+.transform(vueify)
+.transform("babelify", {
+  	presets: ['es2016'],
+  	plugins: ['transform-vue-jsx', 'transform-object-rest-spread']
 });
 
 b
@@ -20,7 +23,7 @@ b
 
 
 console.log(`Created code at ${new Date().toISOString()}`);
-function bundle(){
+function bundle(err){
   	console.log(`Updated code at ${new Date().toISOString()}`);
   	b.bundle().pipe(fs.createWriteStream("app/js/bundle.js"));
   }
