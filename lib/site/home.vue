@@ -14,7 +14,7 @@
 
 	  	</div>
   	</div>
-  	<node-map-search v-on:inputChanged="refreshSearch"/>
+  	<node-map-search v-on:inputChanged="refreshSearch" v-if="data"/>
 
   </div>
 </template>
@@ -29,19 +29,14 @@ module.exports = {
 		const requestStream = Rx.Observable.ajax('./../demo/file.json')
 		.map(e => e.response);
 		const htmlSubscription = requestStream.subscribe(res => {
-			var f = MapNodeFound('pre')(res, (o)=>{
-				_this.searched = true;
-				console.log('arranbg');
-				if(o.length>0){
-					getNodeMapped(parentNodeMap(o[0]), (e)=>{
-						console.log(o[0], ' founded', e);
-					})(res)
-				}
-			});
+			_this.data  = res;
+
 		});
 	},
   	data () {
     	return {
+    		data: null,
+    		onData: false,
       		msg: 'Map Node',
       		searched: false,
       		search: null
@@ -49,8 +44,20 @@ module.exports = {
   	},
   	methods: {
   		refreshSearch(value){
-  			console.log(' no data??????', value);
+  			var f = MapNodeFound(value)(this.data, (o)=>{
+				if(o.length>0){
+					getNodeMapped(parentNodeMap(o[0]), (e)=>{
+						console.log(o[0], ' founded', e);
+					})(this.data)
+				}
+			});
+  			//search(value);
+  			//console.log(' no data??????', value);
+  		},
+  		search(value){
+
   		}
+
   	}
 }
 </script>
