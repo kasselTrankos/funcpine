@@ -19,7 +19,7 @@ var b = browserify({
 b
 .on('update', bundle)
 .bundle()
-.pipe(fs.createWriteStream("app/js/bundle.js"));
+.pipe(fs.createWriteStream("build.js"));
 
 
 console.log(`Created code at ${new Date().toISOString()}`);
