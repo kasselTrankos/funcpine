@@ -35,6 +35,7 @@
     "bluebird": "^3.5.0",
     "browserify": "^14.4.0",
     "escodegen": "^1.8.1",
+    "gojs": "^1.7.15",
     "jsonfile": "^3.0.0",
     "vueify": "^9.4.1"
   },
