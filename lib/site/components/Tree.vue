@@ -43,7 +43,7 @@ module.exports = {
       .attr("height", this.height + this.margin.top + this.margin.bottom)
       .append("g")
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-      this.setMenu(JSON.parse(this.tree.data));
+      this.setMenu(this.tree.data);
       // console.log(JSON.stringify(this.treeData) , ' pppp');
       _root = this.treeData[0];
       _root.x0 = this.height / 2;

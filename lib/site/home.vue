@@ -1,5 +1,7 @@
 <style>
-
+  .founded{
+    text-align: center;
+  }
 </style>
 
 <template>
@@ -8,8 +10,10 @@
   		<div class="col-md-8 col-md-offset-4">
 	  		<h1>{{msg}}</h1>
 	  	</div>
-      <p class="col-md-8 col-md-offset-4"  v-if="founded">founded  {{founded}}</p>
   	</div>
+    <div class="row">
+      <p class="col-md-8 col-md-offset-4 founded" v-if="founded">{{founded}}</p>
+    </div>
   	<node-map-tree :tree="$data" v-if="data" >NAL</node-map-tree>
   	<node-map-search v-on:inputChanged="refreshSearch" v-if="data"/>
   </div>
@@ -31,7 +35,7 @@ module.exports = {
       req.open('GET', './../demo/file.json');
       req.onload = () => {
         if (req.status == 200) {
-          observer.next(req.response);
+          observer.next(JSON.parse(req.response));
           observer.complete();
         } else {
           observer.error(req.statusText);
@@ -57,6 +61,7 @@ module.exports = {
   	data () {
     	return {
     		data: null,
+        founded: 'aun no ',
     		onData: false,
       		msg: 'Func Pine',
       		searched: false,
@@ -66,14 +71,15 @@ module.exports = {
   	methods: {
   		refreshSearch(value){
         var _this = this;
-        console.log(value, this.data);
   			var f = MapNodeFound(value)(this.data, (o)=>{
-          console.log(o,' hemos encontr');
+          
     				if(o.length>0){
-
-    					getNodeMapped(parentNodeMap(o[0]), (e)=>{
-                _this.founded = e;
-    					})(this.data)
+              _this.founded = o[0];
+              console.log(o[0],' hemos encontr');
+    					// getNodeMapped(parentNodeMap(o[0]), (e)=>{
+                
+                
+    					// })(this.data)
     				}
   			 });
   		}
