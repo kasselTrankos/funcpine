@@ -6,36 +6,75 @@
 <script type="text/babel">
 module.exports = {
 	mounted(){
-
-		//this.create();
 	},
 	methods:{
 		create(){
 			if(this.parent) {
 				this.parent.children.push(this);
+				var a = (2 * Math.PI) / this.parent.children.length;
+				var b = (this.parent) ? Math.random():0;
+				for (var i in this.parent.children) {
+					var c = this.parent.children[i];
+					c.angle = c.ini.angle = Math.PI / 2 + a * i + b;
+					c.len = c.ini.len = c.parent.ini.len / this.setup.reduction;
+				}
+			}else{
+				this.visible = true;
+				this.ini.len = this.setup.length * this.setup.reduction;
 			}
-			this.svg = ge1doot.SVGLib(this.screen.elem, true);
 			this.line = this.svg.createLine(1, this.setup.line);
 			this.text = this.svg.createText(String(this.label), this.setup.textFont, false, this.setup.defaultTextColor);
-			//console.log(this.svg);
-			this.pR = Math.round(Math.max(15, this.setup.dotSize * this.ini.len / 200));
+			return this;
+		},
+		createPlot(){
+			this.pR = Math.round(Math.max(this.minDotSize, this.setup.dotSize * this.ini.len / 200));
 			this.plot = this.svg.createOval(this.pR * 2, true);
 			this.plot.strokeColor(this.setup.defaultNodeStrokeColor);
 			this.plot.strokeWidth(1);
 			this.plot.obj = this;
-			this.plot.move(this.x, this.y, this.pR);
-			this.text.fontSize(8 + this.pR);
+			this.text.fontSize(4 + this.pR);
 			return this;
 		},
-		createPlot(){
+		down() {
+			if (this.pointer.isDraging) return;
+			this.drag.ox = this.pointer.x - this.x;
+			this.drag.oy = this.pointer.y - this.y;
+			if (this.drag.node != this) {
+				this.text.fillColor(this.setup.selectedTextColor);
+				this.plot.fillColor(this.setup.expandedNodeColor);
+				var i = 0, node;
+				while ( node = this.nodes[i++]) {
+					node.parent = node.ini.parent;
+					node.len    = node.ini.len;
+					node.lex    = node.ini.len;
+					node.angle  = node.ini.angle;
+				}
+				var oc = [];
+				var ow = this;
+				oc.push(ow);
 
-			return this;
+				while(ow.parent) {
+					ow = ow.parent;
+					oc.push(ow);
+				}
+				for (var i = 1; i < oc.length; i++) {
+					oc[i].lex    = oc[i-1].ini.len;
+					oc[i].len    = oc[i-1].ini.len;
+					oc[i].angle  = oc[i-1].ini.angle - Math.PI;
+					oc[i].parent = oc[i-1];
+				}
+				this.parent = null;
+				this.len    = 0;
+				this.lex    = 0;
+				this.angle  = 0;
+				this.drag.node.plot.strokeColor(this.setup.defaultNodeStrokeColor);
+				this.drag.node.plot.strokeWidth(1);
+				this.drag.node = this;
+			}
 		},
 		run(){
 			if (this.visible) {
-
 				// parent coordinates
-
 				var xp = this.parent ? this.parent.x : this.drag.x;
 				var yp = this.parent ? this.parent.y : this.drag.y;
 
@@ -76,7 +115,6 @@ module.exports = {
 			this.text.fillColor(this.setup.selectedTextColor);
 			this.text.fontWeight("bold");
 			this.plot.fillColor(this.setup.expandedNodeColor);
-
 			for (var i = 0; i < this.children.length; i++) {
 				this.children[i].visible = true;
 				this.children[i].lex = 0;
@@ -107,10 +145,10 @@ module.exports = {
 	},
 	data(){
 		return {
-			svg: null,
 			expanded: false,
 			visible: false,
 			children: [],
+			minDotSize:10,
 			rotation: 0,
 			pR: 0,
 			len: 0,
@@ -120,15 +158,22 @@ module.exports = {
 			y: 0,
 			a: 11,
 			b:10,
-
-			drag:{
-				x:0,
-				y:0
-			},
 			plot: null
 		}
 	},
 	props:{
+		svg:{
+			required:true,
+			default: null
+		},
+		nodes:{
+			required:true,
+			default: null
+		},
+		drag:{
+			required:true,
+			default: null
+		},
 		ini:{
 			type: Object,
 			required: true,
@@ -138,6 +183,11 @@ module.exports = {
 				angle: 0,
 				parent: null
 			}
+		},
+		pointer: {
+			default: null,
+			required: true
+
 		},
 		screen: {
 			default: null,

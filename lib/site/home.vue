@@ -8,6 +8,7 @@
   		<div class="col-md-8 col-md-offset-4">
 	  		<h1>{{msg}}</h1>
 	  	</div>
+      <p class="col-md-8 col-md-offset-4"  v-if="founded">founded  {{founded}}</p>
   	</div>
   	<node-map-tree :tree="$data" v-if="data" >NAL</node-map-tree>
   	<node-map-search v-on:inputChanged="refreshSearch" v-if="data"/>
@@ -57,20 +58,24 @@ module.exports = {
     	return {
     		data: null,
     		onData: false,
-      		msg: 'Map Node',
+      		msg: 'Func Pine',
       		searched: false,
       		search: null
     	}
   	},
   	methods: {
   		refreshSearch(value){
+        var _this = this;
+        console.log(value, this.data);
   			var f = MapNodeFound(value)(this.data, (o)=>{
-				if(o.length>0){
-					getNodeMapped(parentNodeMap(o[0]), (e)=>{
+          console.log(o,' hemos encontr');
+    				if(o.length>0){
 
-					})(this.data)
-				}
-			});
+    					getNodeMapped(parentNodeMap(o[0]), (e)=>{
+                _this.founded = e;
+    					})(this.data)
+    				}
+  			 });
   		}
   	}
 }

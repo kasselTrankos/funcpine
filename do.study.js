@@ -384,20 +384,15 @@
 		if (e && e.target && e.target.obj) {
 
 			var o = e.target.obj;
-
 			if (nodeOver) {
-
 				nodeOver.plot.strokeColor(setup.defaultNodeStrokeColor);
 				nodeOver.plot.strokeWidth(1);
-
 			}
 			o.plot.strokeColor(setup.overNodeColor);
 			o.plot.strokeWidth(Math.round(Math.max(2, o.pR / 3)));
 			nodeOver = o;
-
 		}
-
-	}
+	};
 
 	// create SVG container
 
@@ -418,9 +413,7 @@
 		while ( node = nodes[i++]) {
 			node.createPlot();
 		}
-
 		// expand 1st Node
-
 		drag.node = nodes[0];
 		nodes[0].collapse();
 		nodes[0].expand();
