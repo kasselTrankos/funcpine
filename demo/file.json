@@ -9,7 +9,7 @@
                     "SortAs": "SGML",
                     "GlossTerm": "Standard Generalized Markup Language",
                     "Acronym": "SGML",
-                    "Abbrev": "ISO 8879:1986",
+                    "Abbrev": "xxx",
                     "GlossDef": {
                         "para": "DocBook.",
                         "GlossSeeAlso": ["GML", "XML"]
