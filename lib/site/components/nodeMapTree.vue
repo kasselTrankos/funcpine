@@ -13,14 +13,53 @@
 </template>
 
 <script type="text/babel">
+const Vue = require('vue');
+const parent = require('./nodeMapParent.vue');
+const Node = require('./nodeMapElement.vue');
 module.exports = {
 	mounted(){
-		var screen = ge1doot.screen("screen");
-		///console.log(this.tree, 'eleleme');
+		this.parent = Vue.extend(parent)
+		this.screen = ge1doot.screen("screen");
+		this.setup.length =  Math.max(150, this.screen.height / 4);
+		this.drag.x = screen.width  / 2;
+		this.drag.y = screen.height / 2;
+		this.setMenu(JSON.parse(this.tree.data));
+		console.log(this);
+	},
+	methods: {
+		create(){
+			//console.log(this.$el);
+		},
+		setMenu(node, parent){
+			if (!(Object.prototype.toString.call( node ) =='[object Array]' ||
+				Object.prototype.toString.call( node ) =='[object Object]')) {
+				console.log(node);
+				parent = new this.parent({
+					propsData:{
+						parent: parent,
+						label: node,
+						col:0
+					}
+				});
+				this.nodes.push(parent);
+
+			}else{
+				for (var el in  node) {
+					if(Object.prototype.toString.call( node ) =='[object Array]' ||
+						Object.prototype.toString.call( node ) =='[object Object]'){
+						this.setMenu(node[el], parent);
+					}
+				}
+			}
+
+		}
 	},
 	data(){
 		return {
+			nodes: [],
+			parent: null,
 			setup: {
+				screen: null,
 				friction: 2,
 				length: 300,
 				reduction: 1.33,
@@ -35,10 +74,15 @@ module.exports = {
 				defaultTextColor: "#888",
 				selectedTextColor: "#000",
 				textFont: "Abel, tempus sans itc, cursive, Helvetica, sans-serif"
+			},
+			drag:{
+				x:0,
+				y:0
 			}
 		}
 	},
 	props:{
+
 		tree: {
 	      type: Object,
 	      required: true
