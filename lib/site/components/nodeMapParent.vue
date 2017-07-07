@@ -4,18 +4,39 @@
 </template>
 
 <script type="text/babel">
+const Vue = require('vue');
+const Node = require('./nodeMapElement.vue');
 module.exports = {
 	mounted(){
-
 	},
-	methods: {
-		create(){
 
+	methods: {
+		children(){
+
+		},
+		create(){
+			this.node = Vue.extend(Node);
+			return  new this.node({
+				propsData:{
+					screen: this.screen,
+					parent: this,
+					label: this.label,
+					setup: this.setup
+				}
+			}).create();
 		}
 	},
 	props:{
+		setup:{
+			required: true,
+			default: null
+		},
 		label:{
 	      	required: true
+		},
+		screen: {
+			default: null,
+			required: true
 		},
 		col: {
 			type: Number,
@@ -28,24 +49,12 @@ module.exports = {
 	},
 	data(){
 		return {
-			label: this.label,
-			col: this.col,
-			pR: 0,
-			len: 0,
-			lex: 0,
-			angle: 0,
-			expanded: false,
+			node: null,
 			children: [],
-			parent: parent,
-			visible: false,
-			x: 0,
-			y: 0,
-			ini: {
-				len: 0,
-				lex: 0,
-				angle: 0,
-				parent: this.parent
-			}
+			label: this.label,
+			col: this.col
+
+
 		}
 	}
 }

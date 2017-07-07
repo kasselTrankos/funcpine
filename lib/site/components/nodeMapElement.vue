@@ -6,51 +6,145 @@
 <script type="text/babel">
 module.exports = {
 	mounted(){
-		// this.pR = Math.round(Math.max(5, setup.dotSize * this.ini.len / 200));
-		/*this.plot = svg.createOval(this.pR * 2, true);
-		this.plot.strokeColor(setup.defaultNodeStrokeColor);
-		this.plot.strokeWidth(1);
-		this.plot.obj = this;
 
-		// font size
-		this.text.fontSize(8 + this.pR);*/
-		this.create();
+		//this.create();
 	},
 	methods:{
 		create(){
-			console.log('jajajajaj', this.setup);
+			if(this.parent) {
+				this.parent.children.push(this);
+			}
+			this.svg = ge1doot.SVGLib(this.screen.elem, true);
+			this.line = this.svg.createLine(1, this.setup.line);
+			this.text = this.svg.createText(String(this.label), this.setup.textFont, false, this.setup.defaultTextColor);
+			//console.log(this.svg);
+			this.pR = Math.round(Math.max(15, this.setup.dotSize * this.ini.len / 200));
+			this.plot = this.svg.createOval(this.pR * 2, true);
+			this.plot.strokeColor(this.setup.defaultNodeStrokeColor);
+			this.plot.strokeWidth(1);
+			this.plot.obj = this;
+			this.plot.move(this.x, this.y, this.pR);
+			this.text.fontSize(8 + this.pR);
 			return this;
+		},
+		createPlot(){
+
+			return this;
+		},
+		run(){
+			if (this.visible) {
+
+				// parent coordinates
+
+				var xp = this.parent ? this.parent.x : this.drag.x;
+				var yp = this.parent ? this.parent.y : this.drag.y;
+
+				// trigo
+
+				var a = Math.atan2(
+					(this.y + Math.sin(this.angle + this.rotation) * this.setup.friction) - yp,
+					(this.x + Math.cos(this.angle + this.rotation) * this.setup.friction) - xp
+				);
+
+				if (this.lex < this.len) this.lex += (this.len - this.lex) * .1;
+				this.x = xp + Math.cos(a) * this.lex;
+				this.y = yp + Math.sin(a) * this.lex;
+
+				// screen limits
+
+				if (this.x < this.pR) this.x = this.pR;
+				else if (this.x > screen.width - this.pR) this.x = screen.width - this.pR;
+
+				if (this.y < this.pR) this.y = this.pR;
+				else if (this.y > screen.height - this.pR) this.y = screen.height - this.pR;
+
+				// move elements
+
+				this.line.move(this.x, this.y, xp, yp);
+				this.plot.move(this.x, this.y, this.pR);
+				this.text.move(this.x + this.pR + 5, this.y + this.pR * 0.25);
+
+			}
+		},
+		expand(){
+			this.expanded = true;
+			this.text.fillColor(this.setup.selectedTextColor);
+			this.text.fontWeight("bold");
+			this.plot.fillColor(this.setup.expandedNodeColor);
+
+			// for (var i = 0; i < this.children.length; i++) {
+
+			// 	this.children[i].visible = true;
+			// 	this.children[i].lex = 0;
+
+			// }
+		},
+		collapse() {
+
+			this.expanded = false;
+			console.log(this.children);
+			/*this.text.fillColor(this.parent && this.parent.children.length == 1 ? setup.selectedTextColor : setup.defaultTextColor);
+			this.text.fontWeight(this.parent && this.parent.children.length == 1 ? "bold" : "normal");
+			this.plot.fillColor((this.children.length) ? setup.collapsedNodeColor : this.col);
+
+			for (var i = 0; i < this.children.length; i++) {
+
+				var c = this.children[i];
+				c.visible = false;
+				c.lex = 0;
+				c.line.move(-1, -1, -1, -2);
+				c.plot.move(-1000, -1, 0);
+				c.text.move(-1000,0);
+				c.expanded = false;
+				c.collapse();
+
+			}*/
+
 		}
 	},
 	data(){
 		return {
-			link: null,
-			col: null,
+			expanded: false,
+			children: [],
+			visible: false,
+			svg: null,
+			rotation: 0,
 			pR: 0,
 			len: 0,
 			lex: 0,
 			angle: 0,
-			expanded: false,
-			children: [],
-			parent: null,
-			visible: false,
-			x: 0,
-			y: 0,
+			x: 110,
+			y: 110,
+			a: 11,
+			b:10,
 			ini: {
 				len: 0,
 				lex: 0,
 				angle: 0,
-				parent: null
-			}
+				parent: this.parent
+			},
+			drag:{
+				x:0,
+				y:0
+			},
+			plot: null
 		}
 	},
 	props:{
+		screen: {
+			default: null,
+			required: true
+		},
 		parent:{
 			default: null,
-			type: Object,
+			required: true
+		},
+		label: {
+			required:true,
+			default: null
 		},
 		setup: {
-	      type: Object,
+	      default:null,
 	      required: true
 	    }
 	}
