@@ -11,8 +11,8 @@
 	  		<h1>{{msg}}</h1>
 	  	</div>
   	</div>
-    <div class="row">
-      <p class="col-md-8 col-md-offset-4 founded" v-if="founded">{{founded}}</p>
+    <div class="row" v-if="founded">
+      <node-string class="col-md-8 col-md-offset-4 founded" :path="$founded"/>
     </div>
   	<node-map-tree :tree="$data" v-if="data" >NAL</node-map-tree>
   	<node-map-search v-on:inputChanged="refreshSearch" v-if="data"/>
@@ -21,12 +21,14 @@
 
 <script type="text/babel">
 const nodeMapSearch = require('./components/nodeMapSearch.jsx'),
-	nodeMapTree= require('./components/Tree.vue'),
+	nodeMapTree = require('./components/Tree.vue'),
+  nodeString = require('./components/String.vue'), 
 	Rx = require('rxjs/Rx'),
   {MapNodeFound, parentNodeMap, getNodeMapped, childAtNodeMap}  = require('./../pine');
 module.exports = {
   components: {
-    nodeMapTree: nodeMapTree
+    nodeMapTree: nodeMapTree,
+    nodeString: nodeString
   },
 	mounted() {
 		var _this = this;
