@@ -8,7 +8,7 @@
   }
 
   .node circle {
-     fill: #fff;
+    fill: #fff;
     stroke: steelblue;
     stroke-width: 1.5px;
   }
@@ -63,13 +63,9 @@ module.exports = {
       }];
       const make = (node, parent)=>{
           (function func(node, parent = null){
-            // if(type=='[object Array]') mapNode+=`[${el}]`;
-            // if(type =='[object Object]') mapNode+=(mapNode!='')?`.${el}`:el;
             if(Object.prototype.toString.call( node ) =='[object Array]' ||
               Object.prototype.toString.call( node ) =='[object Object]'){
-
               for(var el in node){
-                
                 parent.children.push({name:el, parent: parent.name, children:[] });
                 func(node[el], parent.children.slice(-1)[0]);
               }
@@ -83,7 +79,6 @@ module.exports = {
     update(source){
       var nodes = this.Tree.nodes(_root).reverse(),
       links = this.Tree.links(nodes);
-
       // // Normalize for fixed-depth.
       nodes.forEach(function(d) { d.y = d.depth * 60; });
 
@@ -95,7 +90,16 @@ module.exports = {
       var nodeEnter = node.enter().append("g")
         .attr("class", "node")
         .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-        .on("click", (d)=>this.click(d, svg, diagonal));
+        .on("click", (d)=>this.click(d, svg, diagonal))
+        .on('mouseover', function(d){
+          var g = d3.select(this);
+          g.style({opacity:'0.6'});
+          //nodeSelection.select("text").style({opacity:'1.0'});
+        }).on('mouseout', function(d){
+          var g = d3.select(this);
+          g.style({opacity:'1'});
+          //nodeSelection.select("text").style({opacity:'1.0'});
+        });
 
       nodeEnter.append("circle")
         .attr("r", 1e-6)
