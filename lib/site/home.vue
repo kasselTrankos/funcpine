@@ -1,7 +1,5 @@
 <style>
-  .founded{
-    text-align: center;
-  }
+  
 </style>
 
 <template>
@@ -11,10 +9,10 @@
 	  		<h1>{{msg}}</h1>
 	  	</div>
   	</div>
-    <div class="row" v-if="founded">
-      <node-string class="col-md-8 col-md-offset-4 founded" :path="$founded"/>
-    </div>
-  	<node-map-tree :tree="$data" v-if="data" >NAL</node-map-tree>
+    
+      <node-string class="col-md-8 col-md-offset-4 founded"  v-if="founded.length>0" :path="founded"/>
+    
+  	<node-map-tree :tree="$data" v-if="data"></node-map-tree>
   	<node-map-search v-on:inputChanged="refreshSearch" v-if="data"/>
   </div>
 </template>
@@ -24,7 +22,8 @@ const nodeMapSearch = require('./components/nodeMapSearch.jsx'),
 	nodeMapTree = require('./components/Tree.vue'),
   nodeString = require('./components/String.vue'), 
 	Rx = require('rxjs/Rx'),
-  {MapNodeFound, parentNodeMap, getNodeMapped, childAtNodeMap}  = require('./../pine');
+  {MapNodeFound, parentNodeMap, pathArray,
+    getNodeMapped, childAtNodeMap}  = require('./../pine');
 module.exports = {
   components: {
     nodeMapTree: nodeMapTree,
@@ -63,7 +62,7 @@ module.exports = {
   	data () {
     	return {
     		data: null,
-        founded: 'aun no ',
+        founded: [],
     		onData: false,
       		msg: 'Func Pine',
       		searched: false,
@@ -74,13 +73,9 @@ module.exports = {
   		refreshSearch(value){
         var _this = this;
   			var f = MapNodeFound(value)(this.data, (o)=>{
-          
     				if(o.length>0){
-              _this.founded = o[0];
-              console.log(o[0],' hemos encontr');
+              _this.founded = pathArray(o[0]);
     					// getNodeMapped(parentNodeMap(o[0]), (e)=>{
-                
-                
     					// })(this.data)
     				}
   			 });
