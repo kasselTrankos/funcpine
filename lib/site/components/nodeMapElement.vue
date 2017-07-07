@@ -32,7 +32,7 @@ module.exports = {
 			return this;
 		},
 		run(){
-			/*if (this.visible) {
+			if (this.visible) {
 
 				// parent coordinates
 
@@ -64,25 +64,27 @@ module.exports = {
 				this.plot.move(this.x, this.y, this.pR);
 				this.text.move(this.x + this.pR + 5, this.y + this.pR * 0.25);
 
-			}*/
+			}
 		},
 		expand(){
+			if(this.ini.parent){
+				for (var i = 0; i < this.ini.parent.children.length; i++) {
+					this.ini.parent.children[i].collapse();
+				}
+			}
 			this.expanded = true;
 			this.text.fillColor(this.setup.selectedTextColor);
 			this.text.fontWeight("bold");
 			this.plot.fillColor(this.setup.expandedNodeColor);
 
-			// for (var i = 0; i < this.children.length; i++) {
-
-			// 	this.children[i].visible = true;
-			// 	this.children[i].lex = 0;
-
-			// }
+			for (var i = 0; i < this.children.length; i++) {
+				this.children[i].visible = true;
+				this.children[i].lex = 0;
+			}
 		},
 		collapse() {
 
 			this.expanded = false;
-			console.log(this.children, this.parent);
 			this.text.fillColor(this.parent && this.parent.children.length == 1 ? this.setup.selectedTextColor : this.setup.defaultTextColor);
 			this.text.fontWeight(this.parent && this.parent.children.length == 1 ? "bold" : "normal");
 			this.plot.fillColor((this.children.length) ? this.setup.collapsedNodeColor : this.col);

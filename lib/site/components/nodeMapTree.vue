@@ -21,6 +21,7 @@ module.exports = {
 		this.parent = Vue.extend(parent);
 		this.node = Vue.extend(node);
 		this.screen = ge1doot.screen("screen");
+		this.pointer = this.screen.pointer;
 		this.setup.length =  Math.max(150, this.screen.height / 4);
 
 		this.drag.x = screen.width  / 2;
@@ -35,6 +36,20 @@ module.exports = {
 			// this.drag.node = this.nodes[0];
 			this.nodes[0].collapse();
 			this.nodes[0].expand();
+			this.run();
+		},
+		run(){
+			requestAnimationFrame(this.run);
+			if (this.drag.ing) {
+				this.drag.x = this.pointer.x - this.drag.ox,
+				this.drag.y = this.pointer.y - this.drag.oy;
+			}
+			this.rotation += this.setup.rotationSpeed;
+			var i = 0, node;
+			while ( node = this.nodes[i++]) {
+				node.run();
+			}
+
 		},
 		setMenu(node, parent=null, el='') {
 			if (!(Object.prototype.toString.call( node ) =='[object Array]' ||
@@ -57,21 +72,19 @@ module.exports = {
 				}
 			}).create();
 			this.nodes.push(_node);
-
 			for (var el in  node) {
 				if(Object.prototype.toString.call( node ) =='[object Array]' ||
 					Object.prototype.toString.call( node ) =='[object Object]'){
 					this.setMenu(node[el], _node, el);
 				}
 			}
-
-
 		}
 	},
 	data(){
 		return {
 			nodes: [],
 			parent: null,
+			pointer: null,
 			node: null,
 			setup: {
 				screen: null,
@@ -92,8 +105,13 @@ module.exports = {
 			},
 			drag:{
 				x:0,
-				y:0
-			}
+				y:0,
+				ox: 0,
+				oy: 0,
+				node: false,
+				ing: false
+			},
+			rotation:0
 		}
 	},
 	props:{
