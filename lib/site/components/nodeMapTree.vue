@@ -47,7 +47,13 @@ module.exports = {
 					label: el,
 					setup: this.setup,
 					screen: this.screen,
-					col:0
+					col:0,
+					ini:{
+						len: 0,
+						lex: 0,
+						angle: 0,
+						parent: parent
+					}
 				}
 			}).create();
 			this.nodes.push(_node);

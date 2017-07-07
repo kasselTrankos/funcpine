@@ -32,7 +32,7 @@ module.exports = {
 			return this;
 		},
 		run(){
-			if (this.visible) {
+			/*if (this.visible) {
 
 				// parent coordinates
 
@@ -64,7 +64,7 @@ module.exports = {
 				this.plot.move(this.x, this.y, this.pR);
 				this.text.move(this.x + this.pR + 5, this.y + this.pR * 0.25);
 
-			}
+			}*/
 		},
 		expand(){
 			this.expanded = true;
@@ -82,14 +82,15 @@ module.exports = {
 		collapse() {
 
 			this.expanded = false;
-			console.log(this.children);
-			/*this.text.fillColor(this.parent && this.parent.children.length == 1 ? setup.selectedTextColor : setup.defaultTextColor);
+			console.log(this.children, this.parent);
+			this.text.fillColor(this.parent && this.parent.children.length == 1 ? this.setup.selectedTextColor : this.setup.defaultTextColor);
 			this.text.fontWeight(this.parent && this.parent.children.length == 1 ? "bold" : "normal");
-			this.plot.fillColor((this.children.length) ? setup.collapsedNodeColor : this.col);
+			this.plot.fillColor((this.children.length) ? this.setup.collapsedNodeColor : this.col);
 
 			for (var i = 0; i < this.children.length; i++) {
 
 				var c = this.children[i];
+
 				c.visible = false;
 				c.lex = 0;
 				c.line.move(-1, -1, -1, -2);
@@ -98,31 +99,26 @@ module.exports = {
 				c.expanded = false;
 				c.collapse();
 
-			}*/
+			}
 
 		}
 	},
 	data(){
 		return {
-			expanded: false,
-			children: [],
-			visible: false,
 			svg: null,
+			expanded: false,
+			visible: false,
+			children: [],
 			rotation: 0,
 			pR: 0,
 			len: 0,
 			lex: 0,
 			angle: 0,
-			x: 110,
-			y: 110,
+			x: 0,
+			y: 0,
 			a: 11,
 			b:10,
-			ini: {
-				len: 0,
-				lex: 0,
-				angle: 0,
-				parent: this.parent
-			},
+
 			drag:{
 				x:0,
 				y:0
@@ -131,6 +127,16 @@ module.exports = {
 		}
 	},
 	props:{
+		ini:{
+			type: Object,
+			required: true,
+			default: {
+				len: 0,
+				lex: 0,
+				angle: 0,
+				parent: null
+			}
+		},
 		screen: {
 			default: null,
 			required: true
