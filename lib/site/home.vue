@@ -17,7 +17,7 @@
 
 <script type="text/babel">
 const nodeMapSearch = require('./components/nodeMapSearch.jsx'),
-	nodeMapTree= require('./components/nodeMapTree.vue'),
+	nodeMapTree= require('./components/Tree.vue'),
 	Rx = require('rxjs/Rx'),
   {MapNodeFound, parentNodeMap, getNodeMapped, childAtNodeMap}  = require('./../pine');
 module.exports = {
