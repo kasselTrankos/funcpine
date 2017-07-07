@@ -12,7 +12,7 @@
     
       <node-string class="col-md-8 col-md-offset-4 founded"  v-if="founded.length>0" :path="founded"/>
     
-  	<node-map-tree :tree="$data" v-if="data"></node-map-tree>
+  	<node-map-tree :tree="$data" v-if="data" :path="founded"></node-map-tree>
   	<node-map-search v-on:inputChanged="refreshSearch" v-if="data"/>
   </div>
 </template>
@@ -62,7 +62,7 @@ module.exports = {
   	data () {
     	return {
     		data: null,
-        founded: [],
+        founded: [{type:'Object', str:'void'}],
     		onData: false,
       		msg: 'Func Pine',
       		searched: false,

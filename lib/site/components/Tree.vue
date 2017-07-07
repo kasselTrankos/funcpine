@@ -65,7 +65,7 @@ module.exports = {
           (function func(node, parent = null){
             if(Object.prototype.toString.call( node ) =='[object Array]' ||
               Object.prototype.toString.call( node ) =='[object Object]'){
-              for(var el in node){
+              for(var el in node) {
                 parent.children.push({name:el, parent: parent.name, children:[] });
                 func(node[el], parent.children.slice(-1)[0]);
               }
@@ -201,7 +201,10 @@ module.exports = {
     }
   },
   props:{
-
+    path: {
+      required: true,
+      type: Array
+    },
     tree: {
         type: Object,
         required: true

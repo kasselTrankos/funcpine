@@ -39,6 +39,11 @@ module.exports = {
       return `.${value.str}`;
     }
   },
+  watch:{
+    'path': (oldval, newval)=>{
+      console.log(oldval, newval);
+    }
+  },
   props:{
     path:{
       type: Array,
