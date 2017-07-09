@@ -1,7 +1,8 @@
 <style>
   #screen{
-    height: calc(100% -40px);
+    
   }
+  
   .node, .pather {
     cursor: pointer;
   }
@@ -35,7 +36,9 @@
   }
 </style>
 <template>
-    <div class="row" id="screen">
+    <div class="row">
+      <div id="screen" class="col-md-10 col-md-offset-1">
+      </div>
     </div>
 </template>
 <script type="text/babel">
@@ -45,19 +48,17 @@ module.exports = {
  
   mounted(){
     __this = this;
+    var elm = this.$el.querySelector('#screen');
+    console.log(this.$el.querySelector('#screen'));
     this.Tree = d3.layout.tree()
       .size([this.height, this.width]);
-
     diagonal = d3.svg.diagonal()
       .projection(function(d) { return [d.y, d.x]; });
-
-    svg = d3.select(this.$el).append("svg")
-      .attr("width", '80%')
+    svg = d3.select(elm).append("svg")
+      .attr("width", '100%')
       .attr("height", 'calc(90% - 80px)')
       .append("g")
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-      
-      // console.log(JSON.stringify(this.treeData) , ' pppp');
       _root = this.setMenu(this.tree.data)[0];
       _root.x0 = this.height / 2;
       _root.y0 = 0;
