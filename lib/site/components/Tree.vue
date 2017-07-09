@@ -23,7 +23,7 @@
   .node text {
     font: 11px sans-serif;
   }
-  .patheon {
+  .link.patheon {
     fill: none;
     stroke: #999;
     stroke-width: 1.5px;
@@ -179,7 +179,7 @@ module.exports = {
 
       // Enter any new links at the parent's previous position.
       link.enter().insert("path", "g")
-        .attr("class", (d)=>(d.target.patheon)? 'patheon': "link")
+        .attr("class", (d)=>(d.target.patheon)? 'link patheon': "link")
         //.attr('fill', (d)=> (d.patheon)?'dark-grey':'grey')
         .attr("d", (d) => {
         var o = {x: source.x0, y: source.y0};
