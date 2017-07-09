@@ -41,7 +41,7 @@ module.exports = {
   },
   watch:{
     'path': (oldval, newval)=>{
-      console.log(oldval, newval);
+      console.log(oldval, newval, 'STRING IS');
     }
   },
   props:{

@@ -9,9 +9,7 @@
 	  		<h1>{{msg}}</h1>
 	  	</div>
   	</div>
-    
-      <node-string class="col-md-8 col-md-offset-4 founded"  v-if="founded.length>0" :path="founded"/>
-    
+    <node-string class="col-md-8 col-md-offset-4 founded"  v-if="founded.length>0" :path="founded"/>
   	<node-map-tree :tree="$data" v-if="data" :path="founded"></node-map-tree>
   	<node-map-search v-on:inputChanged="refreshSearch" v-if="data"/>
   </div>
@@ -59,27 +57,32 @@ module.exports = {
       }
     });
 	},
-  	data () {
-    	return {
-    		data: null,
-        founded: [{type:'Object', str:'void'}],
-    		onData: false,
-      		msg: 'Func Pine',
-      		searched: false,
-      		search: null
-    	}
-  	},
-  	methods: {
-  		refreshSearch(value){
-        var _this = this;
-  			var f = MapNodeFound(value)(this.data, (o)=>{
-    				if(o.length>0){
-              _this.founded = pathArray(o[0]);
-    					// getNodeMapped(parentNodeMap(o[0]), (e)=>{
-    					// })(this.data)
-    				}
-  			 });
-  		}
+  watch:{
+    founded: (oldval, newval)=>{
+      // console.log('home', oldval, newval, this, 'HOME');
+    }
+  },
+	data () {
+  	return {
+  		data: null,
+      founded: [{type:'Object', str:'void'}],
+  		onData: false,
+    		msg: 'Func Pine',
+    		searched: false,
+    		search: null
   	}
+	},
+	methods: {
+		refreshSearch(value){
+      var _this = this;
+			var f = MapNodeFound(value)(this.data, (o)=>{
+  				if(o.length>0){
+            _this.founded = pathArray(o[0]);
+  					// getNodeMapped(parentNodeMap(o[0]), (e)=>{
+  					// })(this.data)
+  				}
+			 });
+		}
+	}
 }
 </script>

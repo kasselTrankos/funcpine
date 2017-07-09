@@ -3,20 +3,32 @@
     height:80%;
     overflow: scroll;
   }
-  .node {
+  .node, .pather {
     cursor: pointer;
   }
-
-  .node circle {
-    fill: #fff;
-    stroke: steelblue;
+  .node.pather circle{
+    fill: #eee;
+    stroke: #8A6BE8;
     stroke-width: 1.5px;
   }
-
-  .node text {
-    font: 10px sans-serif;
+  .node circle {
+    fill: #fff;
+    stroke: #CFDCFF;
+    stroke-width: 1.5px;
   }
-
+  .node.pather text {
+    color: #2200FF;
+    font-weight:bold;
+    font: 11px sans-serif;
+  }
+  .node text {
+    font: 11px sans-serif;
+  }
+  .patheon {
+    fill: none;
+    stroke: #999;
+    stroke-width: 1.5px;
+  }
   .link {
     fill: none;
     stroke: #ccc;
@@ -28,10 +40,12 @@
     </div>
 </template>
 <script type="text/babel">
- var idNode = 0, svg, diagonal, _root;
+ var idNode = 0, svg, diagonal,
+  _root, __this, node;
 module.exports = {
  
   mounted(){
+    __this = this;
     this.Tree = d3.layout.tree()
       .size([this.height, this.width]);
 
@@ -43,30 +57,48 @@ module.exports = {
       .attr("height", this.height + this.margin.top + this.margin.bottom)
       .append("g")
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-      this.setMenu(this.tree.data);
+      
       // console.log(JSON.stringify(this.treeData) , ' pppp');
-      _root = this.treeData[0];
+      _root = this.setMenu(this.tree.data)[0];
       _root.x0 = this.height / 2;
       _root.y0 = 0;
-        
       this.update(_root);
-
       d3.select(self.frameElement).style("height", "500px");
   },
+  watch:{
+    'path': (newval, oldval) => {
+      __this.upgrade(__this.setMenu(__this.tree.data)[0]);
+    }
+  },
   methods:{
+    
     setMenu(tree) {
-
-      this.treeData = [{
+      var _this = this;
+      var _tree = [{
         name: 'file',
         parent: null,
         children:[]
       }];
+      let i = 0;
       const make = (node, parent)=>{
           (function func(node, parent = null){
             if(Object.prototype.toString.call( node ) =='[object Array]' ||
               Object.prototype.toString.call( node ) =='[object Object]'){
               for(var el in node) {
-                parent.children.push({name:el, parent: parent.name, children:[] });
+                var _path = false;
+                
+                if(_this.path && _this.path[i] && el==_this.path[i].str){
+                  _path= (el==_this.path[i].str);
+                  i++;
+                }else{
+                  if(i<_this.path.length && _this.path[i] && (
+                    el==_this.path[i].str && parent.name===_this.path[i-1].str)
+                  ){
+                    _path =(el==_this.path[i].str && parent.name===_this.path[i-1].str);
+                    i++;
+                  }
+                }
+                parent.children.push({name:el, patheon: _path, parent: parent.name, children:[] });
                 func(node[el], parent.children.slice(-1)[0]);
               }
             }else{
@@ -74,7 +106,31 @@ module.exports = {
             }
           })(node, parent);
       };
-      make(tree, this.treeData[0]);
+      make(tree, _tree[0]);
+      return _tree;
+    },
+    upgrade(data) {
+      data.x0 = this.height / 2;
+      data.y0 = 0;
+      _root = data;
+
+
+      // var nodes = this.Tree.nodes(_root).reverse();
+      // nodes.forEach(function(d) { d.y = d.depth * 60; });
+
+      // // // Update the nodes…
+      // node = svg.selectAll("g.node")
+      //   .data(nodes, function(d) { return d.id || (d.id = ++idNode); });
+      // var nodeExit = node.exit().remove();
+
+
+
+      // var link = svg.selectAll("path.link")
+      //   .data(links, (d) => d.target.id);
+      // link.exit().remove();
+      
+      
+      __this.update(data);
     },
     update(source){
       var nodes = this.Tree.nodes(_root).reverse(),
@@ -83,22 +139,20 @@ module.exports = {
       nodes.forEach(function(d) { d.y = d.depth * 60; });
 
       // // Update the nodes…
-      var node = svg.selectAll("g.node")
+      node = svg.selectAll("g.node")
         .data(nodes, function(d) { return d.id || (d.id = ++idNode); });
 
       // // Enter any new nodes at the parent's previous position.
       var nodeEnter = node.enter().append("g")
-        .attr("class", "node")
-        .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-        .on("click", (d)=>this.click(d, svg, diagonal))
+        .attr("class", (d)=>(d.patheon)? 'node pather' : 'node')
+        .attr("transform", (d) =>"translate(" + source.y0 + "," + source.x0 + ")")
+        .on("click", (d)=>this.click(d))
         .on('mouseover', function(d){
           var g = d3.select(this);
           g.style({opacity:'0.6'});
-          //nodeSelection.select("text").style({opacity:'1.0'});
         }).on('mouseout', function(d){
           var g = d3.select(this);
           g.style({opacity:'1'});
-          //nodeSelection.select("text").style({opacity:'1.0'});
         });
 
       nodeEnter.append("circle")
@@ -108,14 +162,15 @@ module.exports = {
       nodeEnter.append("text")
         .attr("x", function(d) { return d.children || d._children ? -10 : 10; })
         .attr("dy", ".15em")
-        .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+        .attr("text-anchor", (d) =>d.children || d._children ? "end" : "start")
+        .style('fill', (d)=> (d.patheon)?'#6959E8':'grey')
         .text(function(d) { return d.name; })
         .style("fill-opacity", 1e-6);
 
-      // // Transition nodes to their new position.
+      // Transition nodes to their new position.
       var nodeUpdate = node.transition()
         .duration(this.duration)
-        .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+        .attr("transform", (d) => "translate(" + d.y + "," + d.x + ")");
 
       nodeUpdate.select("circle")
         .attr("r", 4.5)
@@ -124,10 +179,10 @@ module.exports = {
       nodeUpdate.select("text")
         .style("fill-opacity", 1);
 
-      // // Transition exiting nodes to the parent's new position.
+      // // // Transition exiting nodes to the parent's new position.
       var nodeExit = node.exit().transition()
         .duration(this.duration)
-        .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+        .attr("transform", (d)=> "translate(" + source.y + "," + source.x + ")")
         .remove();
 
       nodeExit.select("circle")
@@ -136,19 +191,20 @@ module.exports = {
       nodeExit.select("text")
         .style("fill-opacity", 1e-6);
 
-      // // Update the links…
+      // Update the links…
       var link = svg.selectAll("path.link")
         .data(links, (d) => d.target.id);
 
-      // // Enter any new links at the parent's previous position.
+      // Enter any new links at the parent's previous position.
       link.enter().insert("path", "g")
-        .attr("class", "link")
+        .attr("class", (d)=>(d.target.patheon)? 'patheon': "link")
+        //.attr('fill', (d)=> (d.patheon)?'dark-grey':'grey')
         .attr("d", (d) => {
         var o = {x: source.x0, y: source.y0};
         return diagonal({source: o, target: o});
       });
 
-      // // Transition links to their new position.
+      // // // Transition links to their new position.
       link.transition()
         .duration(this.duration)
         .attr("d", diagonal);
@@ -162,8 +218,9 @@ module.exports = {
       })
       .remove();
 
-      // // Stash the old positions for transition.
+      // Stash the old positions for transition.
       nodes.forEach((d)=> {
+        // console.log(d, ' tira alante');
         d.x0 = d.x;
         d.y0 = d.y;
       });
