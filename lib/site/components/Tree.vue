@@ -1,7 +1,6 @@
 <style>
   #screen{
-    height:80%;
-    overflow: scroll;
+    height: calc(100% -40px);
   }
   .node, .pather {
     cursor: pointer;
@@ -53,8 +52,8 @@ module.exports = {
       .projection(function(d) { return [d.y, d.x]; });
 
     svg = d3.select(this.$el).append("svg")
-      .attr("width", this.width + this.margin.right + this.margin.left)
-      .attr("height", this.height + this.margin.top + this.margin.bottom)
+      .attr("width", '80%')
+      .attr("height", 'calc(90% - 80px)')
       .append("g")
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
       
@@ -113,23 +112,6 @@ module.exports = {
       data.x0 = this.height / 2;
       data.y0 = 0;
       _root = data;
-
-
-      // var nodes = this.Tree.nodes(_root).reverse();
-      // nodes.forEach(function(d) { d.y = d.depth * 60; });
-
-      // // // Update the nodes…
-      // node = svg.selectAll("g.node")
-      //   .data(nodes, function(d) { return d.id || (d.id = ++idNode); });
-      // var nodeExit = node.exit().remove();
-
-
-
-      // var link = svg.selectAll("path.link")
-      //   .data(links, (d) => d.target.id);
-      // link.exit().remove();
-      
-      
       __this.update(data);
     },
     update(source){
