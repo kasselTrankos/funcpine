@@ -5,7 +5,8 @@
     width: 100%;
 
   }
-  .elm{
+
+  .each, .elm{
     float: none;
     display:inline-block;
     text-align: left;
@@ -21,6 +22,9 @@
     font-weight: bold;
 
   }
+ .each {
+    padding-left: 15px;
+  }
   .elm:hover{
     color: #363C7F;
   }
@@ -28,7 +32,9 @@
 
 <template>
   <div class="row founded">
-    <p class="col-md-12 elm" v-for="(el, key, index) in path">{{ getStr(el, index) }}</p>
+    <div class="each"  v-for="item in path">
+      <p class="col-md-12 elm"  v-for="(el, key, index) in item">{{ getStr(el, index) }}</p>
+    </div>
   </div>
 
 </template>

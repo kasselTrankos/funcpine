@@ -65,7 +65,7 @@ module.exports = {
 	data () {
   	return {
   		data: null,
-      founded: [{type:'Object', str:'void'}],
+      founded: [[{type:'Object', str:'void'}]],
   		onData: false,
     		msg: 'Func Pine',
     		searched: false,
