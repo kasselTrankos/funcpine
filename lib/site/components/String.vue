@@ -24,6 +24,10 @@
   }
  .each {
     padding-left: 15px;
+
+  }
+  .each:after {
+    content: ", ";
   }
   .elm:hover{
     color: #363C7F;
@@ -32,8 +36,8 @@
 
 <template>
   <div class="row founded">
-    <div class="each"  v-for="item in path">
-      <p class="col-md-12 elm"  v-for="(el, key, index) in item">{{ getStr(el, index) }}</p>
+    <div class="each"  v-for="(item, k, i) in path">
+      <p class="col-md-12 elm"  v-for="(el, key, index) in item" v-on:click="clickHandler(el, key, k)" >{{ getStr(el, index) }}</p>
     </div>
   </div>
 
@@ -46,6 +50,10 @@ module.exports = {
 
   },
   methods:{
+
+    clickHandler(e, index, preindex){
+      console.log(e, index, preindex);
+    },
     getStr(value, index){
       if(index==0) {
         if(value.type=='Object')  return value.str
