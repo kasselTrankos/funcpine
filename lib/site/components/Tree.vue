@@ -78,13 +78,12 @@ module.exports = {
     foundPath(path){
       let i = 0;
       let _path = path;
-      return (el, callback)=>{
+      return (el, isPath, callback)=>{
         if(_path &&
           _path[i] &&
-          el==_path[i].str
+          el == _path[i].str 
         ){
           callback(true, i++);
-          //i++;
         }
       }
     },
@@ -107,14 +106,24 @@ module.exports = {
               for(var el in node) {
                 let id = -1, pid = -1;
                 let _path = false;
-                _paths.map((func, index)=>{
-                  func(el, (_same, _i)=>{
+                // _paths.map((func, index)=>{
+                //   func(el, (_same, _i)=>{
+                //     _path = _same;
+                //     pid = index;
+                //     id = _i;
+                //     // return false;
+                //   });
+                // });
+                for(var t =0; t<_paths.length; t++){
+                  _paths[t](el, isPath,  (_same, _i)=>{
                     _path = _same;
-                    pid = index;
+                    pid = t;
                     id = _i;
-                    // return false;
+                    // console.log(parentId);
+
                   });
-                });
+                  if(_path) break;
+                }
                 _c++;
                 _tree.push({
                   id: _c, 
@@ -158,7 +167,7 @@ module.exports = {
         .data( nodes.descendants().slice(1))
         .remove();
       _root =  __this.setMenu(__this.tree.data);
-      // console.log(JSON.stringify(_root));
+      console.log(JSON.stringify(_root));
       treeData = d3.stratify()
         .id(function(d) { return d.id; })
         .parentId(function(d) { return d.parentId; })
