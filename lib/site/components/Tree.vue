@@ -78,18 +78,20 @@ module.exports = {
     foundPath(path){
       let i = 0;
       let _path = path;
-      return (el, isPath, callback)=>{
+      return (el, isPath, parent, callback)=>{
         if(_path &&
           _path[i] &&
           el == _path[i].str 
         ){
-          callback(true, i++);
+          if((i==0 &&
+            i===parent) ||
+          (i>0 && isPath)) callback(true, i++);
         }
       }
     },
     setMenu(tree) {
       var _this = this;
-      let i = 0, _c = 0;
+      let i = 0, _c = 0, _m=0;
       var _tree = [{
         name: "root",
         parent: null,
@@ -99,10 +101,11 @@ module.exports = {
       }];
       let _paths = this.path.map((elm)=>_this.foundPath(elm));
       const make = (node, parent, parentId, isPath)=>{
-          (function func(node, parent = null, parentId){
+          (function func(node, parent = null, parentId, isPath, paf='', _more=0){
 
             if(Object.prototype.toString.call( node ) =='[object Array]' ||
               Object.prototype.toString.call( node ) =='[object Object]'){
+              _more++;
               for(var el in node) {
                 let id = -1, pid = -1;
                 let _path = false;
@@ -115,18 +118,19 @@ module.exports = {
                 //   });
                 // });
                 for(var t =0; t<_paths.length; t++){
-                  _paths[t](el, isPath,  (_same, _i)=>{
+                  _paths[t](el, isPath, parentId,  (_same, _i)=>{
                     _path = _same;
                     pid = t;
                     id = _i;
-                    // console.log(parentId);
-
                   });
                   if(_path) break;
                 }
                 _c++;
+                let _paf = `${paf}.${_more}`;
+                console.log(_paf);
                 _tree.push({
                   id: _c, 
+                  paf: _paf,
                   parentId: parentId, 
                   isPath: _path,  
                   realname: el, 
@@ -137,8 +141,9 @@ module.exports = {
                     parent: pid
                   }
                 });
-                func(node[el], el, _c, _path);
+                func(node[el], el, _c, _path, _paf, _more);
               }
+
             }else{
               //hereda el padre
               var _previo = _tree.slice(-1)[0];
@@ -146,6 +151,7 @@ module.exports = {
               _tree.push({
                 id: _previo.id,
                 realname: parent,
+                paf: _previo.paf,
                 isPath: _previo.isPath,
                 parentId: _previo.parentId,
                 str: _previo.str,
