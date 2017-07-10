@@ -29,6 +29,9 @@
   .each:after {
     content: ", ";
   }
+  .elm:active, .elm:hover{
+    background-color:#F1DDFF;
+  }
   .elm:hover{
     color: #363C7F;
   }
@@ -37,7 +40,7 @@
 <template>
   <div class="row founded">
     <div class="each"  v-for="(item, k, i) in path">
-      <p class="col-md-12 elm"  v-for="(el, key, index) in item" v-on:click="clickHandler(el, key, k)" >{{ getStr(el, index) }}</p>
+      <p class="col-md-12 elm"  v-for="(el, key, index) in item" v-on:mouseover ="clickHandler(el, key, k)" >{{ getStr(el, index) }}</p>
     </div>
   </div>
 

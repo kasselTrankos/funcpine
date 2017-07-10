@@ -69,26 +69,22 @@ module.exports = {
   watch:{
     'strselected': (newval, oldval)=>{
       __this.upgrade();
-      //console.log(newval, 'str select');
     },
     'path': (newval, oldval) => {
         __this.upgrade();
     }
   },
   methods:{
-
     foundPath(path){
       let i = 0;
       let _path = path;
       return (el, callback)=>{
-        let _exists = false;
         if(_path &&
           _path[i] &&
           el==_path[i].str
         ){
-          _exists = true;
-          i++;
-          callback(_exists);
+          callback(true, i++);
+          //i++;
         }
       }
     },
@@ -109,10 +105,14 @@ module.exports = {
             if(Object.prototype.toString.call( node ) =='[object Array]' ||
               Object.prototype.toString.call( node ) =='[object Object]'){
               for(var el in node) {
+                let id = -1, pid = -1;
                 let _path = false;
-                _paths.map((func)=>{
-                  func(el, (_same)=>{
+                _paths.map((func, index)=>{
+                  func(el, (_same, _i)=>{
                     _path = _same;
+                    pid = index;
+                    id = _i;
+                    // return false;
                   });
                 });
                 _c++;
@@ -122,7 +122,11 @@ module.exports = {
                   isPath: _path,  
                   realname: el, 
                   name:el, 
-                  parent: parent 
+                  parent: parent,
+                  str:{
+                    id: id,
+                    parent: pid
+                  }
                 });
                 func(node[el], el, _c, _path);
               }
@@ -135,6 +139,7 @@ module.exports = {
                 realname: parent,
                 isPath: _previo.isPath,
                 parentId: _previo.parentId,
+                str: _previo.str,
                 name:`${parent}:${node}`,
                 parent: _previo.parent
               });
@@ -212,7 +217,17 @@ module.exports = {
         .attr("x", function(d) { return d.children ? -7 : 7; })
         .style("text-anchor", function(d) {
           return d.children ? "end" : "start"; })
-        .text(function(d) { return d.data.name; });
+        .text(function(d) { return d.data.name; })
+        .filter((d)=> (__this.strselected && 
+          d.data.str && 
+          d.data.str.id>=0 && 
+          __this.strselected.id===d.data.str.id &&
+          __this.strselected.parent===d.data.str.parent))
+        .transition()
+        .duration(400)
+        .style("font-size", '18px');
+
+        ;
 
     },
     click(d) {
@@ -228,6 +243,7 @@ module.exports = {
   },
   data(){
     return {
+      str:null,
       idNode: 0,
       treeData: {
         name: 'file',
