@@ -166,24 +166,45 @@ module.exports = {
       .data(nodes.descendants())
       .enter().append("g")
       .attr("class", function(d) {
-
         var _class =  "node" +
           (d.children ? " node--internal" : " node--leaf") +
           (d.data.isPath ? " pather" : " ")
           return _class
-        })
+      })
       .attr("transform", function(d) {
         return "translate(" + d.y + "," + d.x + ")";
       });
+
       // adds the circle to the node
-      node.append("circle")
-        .attr("r", 4);
+      var circle = node.append("circle")
+      .attr("r", 4)
+      .filter((d)=>d.data.isPath)
+      .transition()
+      .delay((d, i)=> i*400)
+      .duration(400)
+      .style("stroke", '#000');
+
+
       node.append("text")
-      .attr("dy", ".15em")
-      .attr("x", function(d) { return d.children ? -7 : 7; })
-      .style("text-anchor", function(d) {
-        return d.children ? "end" : "start"; })
-      .text(function(d) { return d.data.name; });
+        .attr("dy", ".15em")
+        .attr("x", function(d) { return d.children ? -7 : 7; })
+        .style("text-anchor", function(d) {
+          return d.children ? "end" : "start"; })
+        .text(function(d) { return d.data.name; });
+      //custom animation
+      //g.selectAll("circle").forEach((d)=>{
+      //   if(d.data.isPath==true){
+      //     console.log(d.data.realname, d3.select(this));
+      //      d3.select(this)
+      //      //.transition().duration(1000).style("stroke", '#000')
+      //     // d.transition()
+      //     // .duration(1000)
+      //     // .style("stroke", '#000')
+      //     // .style("background-color", "red");
+      //   }
+      //   console.log(d.data.isPath, ' every one');
+      // });
+
     },
     click(d) {
       if (d.children) {
