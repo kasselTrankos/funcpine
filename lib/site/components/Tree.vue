@@ -78,14 +78,12 @@ module.exports = {
     foundPath(path){
       let i = 0;
       let _path = path;
-      return (el, isPath, parent, callback)=>{
+      return (el, parent, callback)=>{
         if(_path &&
-          _path[i] &&
-          el == _path[i].str 
+          _path[parent] &&
+          el == _path[parent].str 
         ){
-          if((i==0 &&
-            i===parent) ||
-          (i>0 && isPath)) callback(true, i++);
+          callback(true, i++);
         }
       }
     },
@@ -101,7 +99,7 @@ module.exports = {
       }];
       let _paths = this.path.map((elm)=>_this.foundPath(elm));
       const make = (node, parent, parentId, isPath)=>{
-          (function func(node, parent = null, parentId, isPath, paf='', _more=0){
+          (function func(node, parent = null, parentId, isPath, paf='', _more=-1){
 
             if(Object.prototype.toString.call( node ) =='[object Array]' ||
               Object.prototype.toString.call( node ) =='[object Object]'){
@@ -118,7 +116,7 @@ module.exports = {
                 //   });
                 // });
                 for(var t =0; t<_paths.length; t++){
-                  _paths[t](el, isPath, parentId,  (_same, _i)=>{
+                  _paths[t](el, _more,  (_same, _i)=>{
                     _path = _same;
                     pid = t;
                     id = _i;
