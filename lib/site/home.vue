@@ -81,7 +81,8 @@ module.exports = {
             for(var i =0; i<o.length; i++){
               _paths.push(pathArray(o[i]));
             }
-            _this.founded = pathArray(o[0]);
+            ///console.log(_paths);
+            _this.founded =  _paths;//pathArray(o[0]);
   					// getNodeMapped(parentNodeMap(o[0]), (e)=>{
   					// })(this.data)
   				}

@@ -85,12 +85,37 @@ module.exports = {
     }
   },
   methods:{
+    foundPath(path){
+      let i = 0;
+      let _path = path;
+      console.log('putin path', _path);
+      return (el, callback)=>{
+        let _exists = false;
+        //console.log(i, _path, 'pàra buscar', _path[i]);
+        if(_path &&
+          _path[i] &&
+          el==_path[i].str
+        ){
+          _exists = true;
+          i++;
+          callback(_exists);
+        }
+        //callback(_exists);
 
+      }
+    },
     setMenu(tree) {
       var _this = this;
       let i = 0, _c = 0;
-      var _tree = [{"name": "root", "parent": null, parentId:'', id:_c, isPath: (_this.path && _this.path[i].str!='void')}];
-
+      var _tree = [{
+        name: "root",
+        parent: null,
+        parentId:'',
+        id:_c,
+        isPath: (_this.path && _this.path[i].str!='void')
+      }];
+      let _paths = this.path.map((elm)=>_this.foundPath(elm));
+      console.log(_paths);
       const make = (node, parent, parentId, isPath)=>{
           (function func(node, parent = null, parentId){
 
@@ -98,15 +123,19 @@ module.exports = {
               Object.prototype.toString.call( node ) =='[object Object]'){
               for(var el in node) {
                 let _path = false;
-                if(_this.path &&
-                    _this.path[i] &&
-                    (el==_this.path[i].str)
-                )
-                {
 
-                        _path = true;
-                        i++;
-                }
+                _paths.map((func)=>{
+                  func(el, (_same)=>{
+                    _path = _same;
+                  });
+                });
+                // if(_this.path &&
+                //     _this.path[i]
+                // )
+                // {
+                //   _path =  pat(el==_this.path[i].str);
+                //   i++;
+                // }
                 _c++;
                 _tree.push({id: _c, parentId: parentId, isPath: _path,  realname: el, name:el, parent: parent });
                 func(node[el], el, _c, _path);
