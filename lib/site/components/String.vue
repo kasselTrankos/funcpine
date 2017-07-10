@@ -1,33 +1,43 @@
 <style>
   .founded{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
+    display:inline-block;
+    width: 100%;
+
   }
   .elm{
+    float: none;
+    display:inline-block;
+    text-align: left;
+    width: auto;
+    text-align:left;
+    margin:0 auto;
+    display: inline-block;
+    padding: 0px;
     cursor: pointer;
-    background-color: tomato;
-    color: white;
+    font: 12px Verdana;
+    /*background-color: #CDE897;*/
+    color: #597F7B;
     font-weight: bold;
-    text-align: center;
+
   }
   .elm:hover{
-    background-color: red;
+    color: #363C7F;
   }
 </style>
 
 <template>
   <div class="row founded">
-    <p class="elm" v-for="(el, key, index) in path">{{ getStr(el, index) }}</p>
+    <p class="col-md-12 elm" v-for="(el, key, index) in path">{{ getStr(el, index) }}</p>
   </div>
-  
+
 </template>
 
 <script type="text/babel">
 module.exports = {
   mounted(){
 
-    
+
   },
   methods:{
     getStr(value, index){

@@ -1,5 +1,5 @@
 <style>
-  
+
 </style>
 
 <template>
@@ -9,7 +9,7 @@
 	  		<h1>{{msg}}</h1>
 	  	</div>
   	</div>
-    <node-string class="col-md-8 col-md-offset-4 founded"  v-if="founded.length>0" :path="founded"/>
+    <node-string v-if="founded.length>0" :path="founded"/>
   	<node-map-tree :tree="$data" v-if="data" :path="founded"></node-map-tree>
   	<node-map-search v-on:inputChanged="refreshSearch" v-if="data"/>
   </div>
@@ -18,7 +18,7 @@
 <script type="text/babel">
 const nodeMapSearch = require('./components/nodeMapSearch.jsx'),
 	nodeMapTree = require('./components/Tree.vue'),
-  nodeString = require('./components/String.vue'), 
+  nodeString = require('./components/String.vue'),
 	Rx = require('rxjs/Rx'),
   {MapNodeFound, parentNodeMap, pathArray,
     getNodeMapped, childAtNodeMap}  = require('./../pine');

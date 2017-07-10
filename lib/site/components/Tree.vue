@@ -1,8 +1,7 @@
 <style>
   #screen{
-    
+
   }
-  
   .node, .pather {
     cursor: pointer;
   }
@@ -45,7 +44,7 @@
  var idNode = 0, svg, diagonal,
   _root, __this, node;
 module.exports = {
- 
+
   mounted(){
     __this = this;
     var elm = this.$el.querySelector('#screen');
@@ -71,7 +70,7 @@ module.exports = {
     }
   },
   methods:{
-    
+
     setMenu(tree) {
       var _this = this;
       var _tree = [{
@@ -86,7 +85,7 @@ module.exports = {
               Object.prototype.toString.call( node ) =='[object Object]'){
               for(var el in node) {
                 var _path = false;
-                
+
                 if(_this.path && _this.path[i] && el==_this.path[i].str){
                   _path= (el==_this.path[i].str);
                   i++;
@@ -229,9 +228,9 @@ module.exports = {
       },
       Tree: null,
       margin:{
-        top: 20, 
-        right: 10, 
-        bottom: 20, 
+        top: 20,
+        right: 10,
+        bottom: 20,
         left: 120
       },
       width:800,
