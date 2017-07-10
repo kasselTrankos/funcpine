@@ -16,9 +16,9 @@
     stroke-width: 1.5px;
   }
   .node.pather text {
-    color: #2200FF;
+    color: #D8DEEA;
     font-weight:bold;
-    font: 11px sans-serif;
+    font: 10px verdana;
   }
   .node text {
     font: 10px Arial, Verdana;
@@ -148,7 +148,6 @@ module.exports = {
         }else{
           d.y = d.parent.y+20;
         }
-
       });
 
 
@@ -182,7 +181,7 @@ module.exports = {
       .transition()
       .delay((d, i)=> i*400)
       .duration(400)
-      .style("stroke", '#000');
+      .style("stroke", '#09157F');
 
 
       node.append("text")
@@ -191,19 +190,6 @@ module.exports = {
         .style("text-anchor", function(d) {
           return d.children ? "end" : "start"; })
         .text(function(d) { return d.data.name; });
-      //custom animation
-      //g.selectAll("circle").forEach((d)=>{
-      //   if(d.data.isPath==true){
-      //     console.log(d.data.realname, d3.select(this));
-      //      d3.select(this)
-      //      //.transition().duration(1000).style("stroke", '#000')
-      //     // d.transition()
-      //     // .duration(1000)
-      //     // .style("stroke", '#000')
-      //     // .style("background-color", "red");
-      //   }
-      //   console.log(d.data.isPath, ' every one');
-      // });
 
     },
     click(d) {
