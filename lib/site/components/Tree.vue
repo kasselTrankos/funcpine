@@ -67,24 +67,16 @@ module.exports = {
       // d3.select(self.frameElement).style("height", "500px");
   },
   watch:{
+    'strselected': (newval, oldval)=>{
+      __this.upgrade();
+      //console.log(newval, 'str select');
+    },
     'path': (newval, oldval) => {
-      var nodes = __this.Tree(treeData);
-      var node = g.selectAll(".node")
-        .data(nodes.descendants())
-        .remove();
-      var link = g.selectAll(".link")
-        .data( nodes.descendants().slice(1))
-        .remove();
-      _root =  __this.setMenu(__this.tree.data);
-      // console.log(JSON.stringify(_root));
-      treeData = d3.stratify()
-        .id(function(d) { return d.id; })
-        .parentId(function(d) { return d.parentId; })
-        (_root);
-      __this.update();
+        __this.upgrade();
     }
   },
   methods:{
+
     foundPath(path){
       let i = 0;
       let _path = path;
@@ -118,14 +110,20 @@ module.exports = {
               Object.prototype.toString.call( node ) =='[object Object]'){
               for(var el in node) {
                 let _path = false;
-
                 _paths.map((func)=>{
                   func(el, (_same)=>{
                     _path = _same;
                   });
                 });
                 _c++;
-                _tree.push({id: _c, parentId: parentId, isPath: _path,  realname: el, name:el, parent: parent });
+                _tree.push({
+                  id: _c, 
+                  parentId: parentId, 
+                  isPath: _path,  
+                  realname: el, 
+                  name:el, 
+                  parent: parent 
+                });
                 func(node[el], el, _c, _path);
               }
             }else{
@@ -146,11 +144,21 @@ module.exports = {
       make(tree, _tree[0].name, _c);
       return _tree;
     },
-    upgrade(data) {
-      data.x0 = this.height / 2;
-      data.y0 = 0;
-      _root = data;
-      __this.update(data);
+    upgrade() {
+      var nodes = __this.Tree(treeData);
+      var node = g.selectAll(".node")
+        .data(nodes.descendants())
+        .remove();
+      var link = g.selectAll(".link")
+        .data( nodes.descendants().slice(1))
+        .remove();
+      _root =  __this.setMenu(__this.tree.data);
+      // console.log(JSON.stringify(_root));
+      treeData = d3.stratify()
+        .id(function(d) { return d.id; })
+        .parentId(function(d) { return d.parentId; })
+        (_root);
+      __this.update();
     },
     getClass(){
 
@@ -166,8 +174,6 @@ module.exports = {
           d.y = d.parent.y+20;
         }
       });
-
-
       var link = g.selectAll(".link")
         .data( nodes.descendants().slice(1))
         .enter().append("path")
@@ -242,6 +248,10 @@ module.exports = {
     }
   },
   props:{
+    strselected:{
+      required: true,
+      type: Object
+    },
     path: {
       required: true,
       type: Array

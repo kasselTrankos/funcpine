@@ -50,9 +50,8 @@ module.exports = {
 
   },
   methods:{
-
     clickHandler(e, index, preindex){
-      console.log(e, index, preindex);
+      this.$emit('clickStr', {id: index, parent: preindex});
     },
     getStr(value, index){
       if(index==0) {
@@ -65,7 +64,7 @@ module.exports = {
   },
   watch:{
     'path': (oldval, newval)=>{
-      console.log(oldval, newval, 'STRING IS');
+      // console.log(oldval, newval, 'STRING IS');
     }
   },
   props:{
