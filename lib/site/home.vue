@@ -7,12 +7,23 @@
   color:#2A437F;
   text-align: center;
 }
-.upload, .remove{
+.upload, .remove, .urlfile{
+  float: left;
   margin-top: 20px;
 }
 .btn-file {
     position: relative;
     overflow: hidden;
+}
+.middle{
+  float: left;
+  margin-top:24px;
+  margin-left: 5px;
+  // display: table-cell;
+}
+.middle input{
+  display: table-row;
+  
 }
 .btn-file input[type=file] {
     position: absolute;
@@ -39,13 +50,22 @@
   		<div class="col-md-6 col-md-offset-2 title">
 	  		<h1>{{msg}}</h1>
 	  	</div>
-      <div class="col-md-2 col-md-offset-1">
-        <span type="file" class="btn btn-primary btn-file upload" aria-label="Left center" v-if="!file">
-          <input type="file" v-on:change="onFileChange"  accept=".json"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Seleccionar JSON
+      <div class="col-md-3 col-md-offset-1">
+
+        <span type="file" class="btn btn-primary btn-file upload" aria-label="Left center" v-if="!file && isFile">
+          <input type="file" v-on:change="onFileChange"  accept=".json" /><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Seleccionar JSON
         </span>
-        <span type="file" class="btn btn-danger remove" aria-label="Left center" v-if="file" v-on:click="file=false;">
+        <span type="file" class="btn btn-danger remove" aria-label="Left center" v-if="file && isFile" v-on:click="file=false;">
           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  {{file}}
         </span>
+        <div class="form-group urlfile" v-if="!isFile">
+          <input type="text" v-on:input="onChange" 
+          class="form-control col-md-4  " id="searching" 
+          placeholder="Escribe un nodo o número" />
+        </div>
+       <label class="form-check-label middle">
+        <input class="form-check-input" type="checkbox" v-model="isFile" />
+        </label>
       </div>
   	</div>
     <node-string v-if="founded.length>0" :path="founded" v-on:clickStr="refreshTree"/>
@@ -61,7 +81,8 @@ const nodeMapSearch = require('./components/nodeMapSearch.jsx'),
 	Rx = require('rxjs/Rx'),
   {MapNodeFound, parentNodeMap, pathArray,
     getNodeMapped, childAtNodeMap}  = require('./../pine'),
-  reader = new FileReader();
+  reader = new FileReader(),
+  req = new XMLHttpRequest();
 module.exports = {
   components: {
     nodeMapTree: nodeMapTree,
@@ -69,14 +90,14 @@ module.exports = {
   },
 	mounted() {
 		var _this = this;
-    // reader = new FileReader();
+    req.open('GET', './../demo/file.json');
+    req.send();
     const requestStream = Rx.Observable.create((observer) => {
-      var req = new XMLHttpRequest();
-      req.open('GET', './../demo/file.json');
+      
       req.onload = () => {
         if (req.status == 200) {
           observer.next(JSON.parse(req.response));
-          observer.complete();
+          // observer.complete();
         } else {
           observer.error(req.statusText);
         }
@@ -84,7 +105,7 @@ module.exports = {
       req.onerror = () => {
         observer.error(new Error("Unkown Error"));
       }
-      req.send();
+      
     });
     const requestJSON = Rx.Observable.create((observer)=>{
       reader.onload = (e)=> {
@@ -117,6 +138,7 @@ module.exports = {
   },
 	data () {
   	return {
+      isFile: false,
       strselected: {},
       file: false,
   		data: null,
@@ -128,6 +150,11 @@ module.exports = {
   	}
 	},
 	methods: {
+    onChange(e){
+      this.data = false;
+      req.open('GET', e.target.value);
+      req.send();
+    },
     onFileChange(e){
       this.data = false;
       this.file = e.target.files[0].name; 
