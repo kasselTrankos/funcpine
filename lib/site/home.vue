@@ -40,8 +40,11 @@
 	  		<h1>{{msg}}</h1>
 	  	</div>
       <div class="col-md-2 col-md-offset-1">
-        <span type="file" class="btn btn-primary btn-file upload" aria-label="Left center">
-          <input type="file" v-on:change="onFileChange"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Seleccionar JSON
+        <span type="file" class="btn btn-primary btn-file upload" aria-label="Left center" v-if="!file">
+          <input type="file" v-on:change="onFileChange"  accept=".json"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Seleccionar JSON
+        </span>
+        <span type="file" class="btn btn-danger" aria-label="Left center" v-if="file" v-on:click="file=false;">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  {{file}}
         </span>
       </div>
   	</div>
@@ -57,7 +60,8 @@ const nodeMapSearch = require('./components/nodeMapSearch.jsx'),
   nodeString = require('./components/String.vue'),
 	Rx = require('rxjs/Rx'),
   {MapNodeFound, parentNodeMap, pathArray,
-    getNodeMapped, childAtNodeMap}  = require('./../pine');
+    getNodeMapped, childAtNodeMap}  = require('./../pine'),
+  reader = new FileReader();
 module.exports = {
   components: {
     nodeMapTree: nodeMapTree,
@@ -65,6 +69,7 @@ module.exports = {
   },
 	mounted() {
 		var _this = this;
+    // reader = new FileReader();
     const requestStream = Rx.Observable.create((observer) => {
       var req = new XMLHttpRequest();
       req.open('GET', './../demo/file.json');
@@ -80,6 +85,18 @@ module.exports = {
         observer.error(new Error("Unkown Error"));
       }
       req.send();
+    });
+    const requestJSON = Rx.Observable.create((observer)=>{
+      reader.onload = (e)=> {
+        observer.next(JSON.parse(reader.result));
+      }
+    });
+    requestJSON.subscribe({
+      next: (e)=>{
+        _this.founded = [];
+        _this.strselected =  {};
+        _this.data  = e;
+      }
     });
     requestStream.subscribe({
       next: (e)=>{
@@ -101,6 +118,7 @@ module.exports = {
 	data () {
   	return {
       strselected: {},
+      file: false,
   		data: null,
       founded: [],
   		onData: false,
@@ -111,7 +129,14 @@ module.exports = {
 	},
 	methods: {
     onFileChange(e){
-      console.log(e);
+      this.data = false;
+      this.file = e.target.files[0].name; 
+
+      if (window.File && window.FileReader && window.FileList && window.Blob) {
+        reader.readAsText(e.target.files[0]);
+      } else {
+        // console.log('The File APIs are not fully supported in this browser.');
+      }
     },
     refreshTree(e){
       this.strselected = e;

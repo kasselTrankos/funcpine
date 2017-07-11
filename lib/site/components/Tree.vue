@@ -63,11 +63,14 @@ module.exports = {
     this.update();
   },
   watch:{
+    'tree': (newval, oldval)=>{
+      __this.upgrade();
+    },
     'strselected': (newval, oldval)=>{
       __this.upgrade();
     },
     'path': (newval, oldval) => {
-        __this.upgrade();
+      __this.upgrade();
     }
   },
   methods:{
@@ -104,7 +107,8 @@ module.exports = {
                 let isPath = false;
                 var _smap= _map;
                 var _smore = _more+1;
-                _smap+=(/^\d+$/.test(el)) ? `[${el}]` : `.${el}`;
+
+                _smap+=(/^\d+$/.test(el)) ? `[${el}]` :(_map!='')? `.${el}`: `${el}`;
                 let _results = [];
                 _paths.map((func, index)=>{
                   func(_smore, _smap, (e)=>{
@@ -269,9 +273,9 @@ module.exports = {
       type: Array
     },
     tree: {
-        type: Object,
-        required: true
-      }
+      type: Object,
+      required: true
+    }
   }
 }
 </script>
