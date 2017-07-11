@@ -69,6 +69,7 @@ module.exports = {
   },
   watch:{
     'strselected': (newval, oldval)=>{
+      console.log(newval, ' vamos que lo petamos');
       __this.upgrade();
     },
     'path': (newval, oldval) => {
@@ -78,10 +79,9 @@ module.exports = {
   methods:{
     foundPath(path){
       return (parent, map, callback)=>{
-        //console.log(patternToString(path.slice(0, parent)) );
         if(path &&
-          patternToString(path.slice(0, parent)) == map
-        ){
+          patternToString(path.slice(0, parent)) == map)
+        {
           callback(true);
         }
       }
@@ -89,7 +89,6 @@ module.exports = {
     setMenu(tree) {
       var _this = this;
       let i = 0, _c = 0, _m=0;
-
       var _tree = [{
         name: "root",
         parent: null,
@@ -97,7 +96,6 @@ module.exports = {
         id:_c,
         isPath: false
       }];
-
       let _paths = this.path.map((elm)=>_this.foundPath(elm));
       const make = (node, parent, parentId)=>{
           (function func(node, parent = null,
@@ -108,35 +106,31 @@ module.exports = {
             if(Object.prototype.toString.call( node ) =='[object Array]' ||
               Object.prototype.toString.call( node ) =='[object Object]'){
               _more++;
-              // console.log(_map);
               for(var el in node) {
                 let id = -1, pid = -1;
-                let _path = false;
+                let isPath = false;
                 ///using for, i can make break whe is founded
                 var _smap= _map;
                 var _smore = _more+1;
                 _smap+=(/^\d*$/.test(el)) ? `[${el}]` : `.${el}`;
-                for(var t =0; t<_paths.length; t++){
-                  _paths[t](_smore, _smap,  (_same)=>{
-                    _path = _same;
-                    pid = t;
-                    id = _more;
-                  });
-                  if(_path) break;
-                }
+                let _results = [];
+                _paths.map((func, index)=>{
+                  func(_smore, _smap, (e)=>{
+                      isPath = e;
+                      _results.push(index);
+                  })
+                });
                 _c++;
-
-
                 _tree.push({
                   id: _c,
                   parentId: parentId,
-                  isPath: _path,
+                  isPath: isPath,
                   realname: el,
                   name:el,
                   parent: parent,
                   str:{
-                    id: id,
-                    parent: pid
+                    results: _results,
+                    id: _more
                   }
                 });
                 func(node[el],
@@ -149,22 +143,18 @@ module.exports = {
 
             }else{
               //hereda el padre
-              let _path = false;
+              let isPath = false;
               var _previo = _tree.slice(-1)[0];
               delete _tree.splice(_c, 1);
-
-              for(var t =0; t<_paths.length; t++){
-                  _paths[t](++_more, _map,  (_same)=>{
-                    _path = _same;
-                    pid = t;
-                    id = _more;
-                  });
-                  if(_path) break;
-                }
+              _paths.map((func, index)=>{
+                func(++_more, _map, (e)=>{
+                    isPath = e;
+                })
+              });
               _tree.push({
                 id: _previo.id,
                 realname: parent,
-                isPath: _path,
+                isPath: isPath,
                 parentId: _previo.parentId,
                 str: _previo.str,
                 name:`${parent}:${node}`,
@@ -194,6 +184,12 @@ module.exports = {
     },
     getClass(){
 
+    },
+    isOver(str){
+      if(str){
+        return (str.results.indexOf(__this.strselected.parent)>=0 && str.id==__this.strselected.id);
+      }
+      return false;
     },
     update(){
       var nodes = this.Tree(treeData);
@@ -245,11 +241,7 @@ module.exports = {
         .style("text-anchor", function(d) {
           return d.children ? "end" : "start"; })
         .text(function(d) { return d.data.name; })
-        .filter((d)=> (__this.strselected &&
-          d.data.str &&
-          d.data.str.id>=0 &&
-          __this.strselected.id===d.data.str.id &&
-          __this.strselected.parent===d.data.str.parent))
+        .filter((d)=> __this.isOver(d.data.str))
         .transition()
         .duration(400)
         .style("font-size", '18px');

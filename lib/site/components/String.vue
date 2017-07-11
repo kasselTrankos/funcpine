@@ -29,6 +29,9 @@
   .each:after {
     content: ", ";
   }
+  .each:last-child:after {
+    content: "";
+  }
   .elm:active, .elm:hover{
     background-color:#F1DDFF;
   }
@@ -49,8 +52,6 @@
 <script type="text/babel">
 module.exports = {
   mounted(){
-
-
   },
   methods:{
     clickHandler(e, index, preindex){
