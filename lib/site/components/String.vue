@@ -43,7 +43,7 @@
 <template>
   <div class="row founded">
     <div class="each"  v-for="(item, k, i) in path">
-      <p class="col-md-12 elm"  v-for="(el, key, index) in item" v-on:mouseover ="clickHandler(el, key, k)" >{{ getStr(el, index) }}</p>
+      <p class="col-md-12 elm"  v-for="(el, key, index) in item" v-on:mouseover ="overHandler(el, key, k)"  v-on:mouseout ="outHandler()" >{{ getStr(el, index) }}</p>
     </div>
   </div>
 
@@ -54,8 +54,11 @@ module.exports = {
   mounted(){
   },
   methods:{
-    clickHandler(e, index, preindex){
+    overHandler(e, index, preindex){
       this.$emit('clickStr', {id: index, parent: preindex});
+    },
+    outHandler(){
+      this.$emit('clickStr', {});
     },
     getStr(value, index){
       if(index==0) {

@@ -69,7 +69,6 @@ module.exports = {
   },
   watch:{
     'strselected': (newval, oldval)=>{
-      console.log(newval, ' vamos que lo petamos');
       __this.upgrade();
     },
     'path': (newval, oldval) => {
