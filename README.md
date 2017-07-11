@@ -22,4 +22,5 @@ Then in the input write your match and it match then redraw the tree with the pa
 
 
 The json loaded is in /demo/file.json, and you can change content for any other json code.
+Ther is a button at right of header thats load a local file of your machime, and a checkbox thart if you check, changes to a input text. And in this text type the url to load json ( be aware of where url is a ral json, there is no validation of content).
 
