@@ -42,15 +42,14 @@
 </template>
 <script type="text/babel">
 const {patternToString} = require('./../../pine');
- var idNode = 0, svg,
-  _root, g, __this, node, treeData;
+ var svg,  g, __this, node, treeData;
 module.exports = {
 
   mounted(){
     __this = this;
     var elm = this.$el.querySelector('#screen');
     this.Tree = d3.tree()
-      .separation(function(a, b) {  return (a.parent == b.parent ? 1 : 2) / a.depth;})
+      .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth)
       .size([this.height, this.width]);
     svg = d3.select(elm).append("svg")
       .attr("width", '100%')
@@ -58,14 +57,10 @@ module.exports = {
     g = svg.append("g")
         .attr("transform",
         "translate(" + this.margin.left + "," + this.margin.top + ")");
-    _root = this.setMenu(this.tree.data);
-
     treeData = d3.stratify()
       .id((d) => d.id)
-      .parentId(function(d) { return d.parentId; })
-      (_root);
+      .parentId((d) => d.parentId)(this.setMenu(this.tree.data));
     this.update();
-      // d3.select(self.frameElement).style("height", "500px");
   },
   watch:{
     'strselected': (newval, oldval)=>{
@@ -106,12 +101,10 @@ module.exports = {
               Object.prototype.toString.call( node ) =='[object Object]'){
               _more++;
               for(var el in node) {
-                let id = -1, pid = -1;
                 let isPath = false;
-                ///using for, i can make break whe is founded
                 var _smap= _map;
                 var _smore = _more+1;
-                _smap+=(/^\d*$/.test(el)) ? `[${el}]` : `.${el}`;
+                _smap+=(/^\d+$/.test(el)) ? `[${el}]` : `.${el}`;
                 let _results = [];
                 _paths.map((func, index)=>{
                   func(_smore, _smap, (e)=>{
@@ -173,12 +166,11 @@ module.exports = {
       var link = g.selectAll(".link")
         .data( nodes.descendants().slice(1))
         .remove();
-      _root =  __this.setMenu(__this.tree.data);
       // console.log(JSON.stringify(_root));
       treeData = d3.stratify()
-        .id(function(d) { return d.id; })
-        .parentId(function(d) { return d.parentId; })
-        (_root);
+        .id((d) => d.id)
+        .parentId((d) => d.parentId)
+        (__this.setMenu(__this.tree.data));
       __this.update();
     },
     getClass(){
@@ -212,26 +204,26 @@ module.exports = {
           + " " + d.parent.y + "," + d.parent.x;
       });
       var node = g.selectAll(".node")
-      .data(nodes.descendants())
-      .enter().append("g")
-      .attr("class", function(d) {
-        var _class =  "node" +
-          (d.children ? " node--internal" : " node--leaf") +
-          (d.data.isPath ? " pather" : " ")
-          return _class
-      })
-      .attr("transform", function(d) {
-        return "translate(" + d.y + "," + d.x + ")";
+        .data(nodes.descendants())
+        .enter().append("g")
+        .attr("class", function(d) {
+          var _class =  "node" +
+            (d.children ? " node--internal" : " node--leaf") +
+            (d.data.isPath ? " pather" : " ")
+            return _class
+        })
+        .attr("transform", function(d) {
+          return "translate(" + d.y + "," + d.x + ")";
       });
 
       // adds the circle to the node
       var circle = node.append("circle")
-      .attr("r", 4)
-      .filter((d)=>d.data.isPath)
-      .transition()
-      .delay((d, i)=> i*400)
-      .duration(400)
-      .style("stroke", '#09157F');
+        .attr("r", 4)
+        .filter((d)=>d.data.isPath)
+        .transition()
+        .delay((d, i)=> i*400)
+        .duration(400)
+        .style("stroke", '#09157F');
 
 
       node.append("text")
@@ -244,25 +236,11 @@ module.exports = {
         .transition()
         .duration(400)
         .style("font-size", '18px');
-
-        ;
-
-    },
-    click(d) {
-      if (d.children) {
-        d._children = d.children;
-        d.children = null;
-      } else {
-        d.children = d._children;
-        d._children = null;
-      }
-      this.update(d);
     }
   },
   data(){
     return {
       str:null,
-      idNode: 0,
       treeData: {
         name: 'file',
         parent: null,

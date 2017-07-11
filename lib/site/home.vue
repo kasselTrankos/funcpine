@@ -79,7 +79,6 @@ module.exports = {
       //console.log(e);
     },
 		refreshSearch(value){
-      var _this = this;
       let _paths = [];
 			var f = MapNodeFound(value)(this.data, (o)=>{
   				if(o.length>0){
@@ -90,7 +89,7 @@ module.exports = {
             }
   				}
 			 });
-      _this.founded =  _paths;//pathArray(o[0]);
+      this.founded =  _paths;//pathArray(o[0]);
 		}
 	}
 }
