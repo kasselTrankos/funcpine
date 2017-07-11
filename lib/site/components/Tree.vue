@@ -78,6 +78,7 @@ module.exports = {
   methods:{
     foundPath(path){
       return (parent, map, callback)=>{
+        //console.log(patternToString(path.slice(0, parent)) );
         if(path &&
           patternToString(path.slice(0, parent)) == map
         ){
@@ -101,12 +102,12 @@ module.exports = {
           (function func(node, parent = null,
             parentId, isPath, paf='', _more=-1, type, _map='')
           {
-
+            if(type=='[object Array]') _map+=`[${parent}]`;
+            if(type =='[object Object]') _map+=(_map!='')?`.${parent}`: parent;
             if(Object.prototype.toString.call( node ) =='[object Array]' ||
               Object.prototype.toString.call( node ) =='[object Object]'){
               _more++;
-              if(type=='[object Array]') _map+=`[${parent}]`;
-              if(type =='[object Object]') _map+=(_map!='')?`.${parent}`: parent;
+
 
               // console.log(_map);
               for(var el in node) {
@@ -114,15 +115,17 @@ module.exports = {
                 let _path = false;
                 ///using for, i can make break whe is founded
                 let _paf = `${paf}.${_more}`;
-                // for(var t =0; t<_paths.length; t++){
-                //   _paths[t](_more, _map,  (_same)=>{
-                //     _path = _same;
-                //     pid = t;
-                //     id = _more;
-                //     console.log(`founded map object or array ---->${_map}------${el}----${_more}`);
-                //   });
-                //   if(_path) break;
-                // }
+                var _smap= _map;
+                var _smore = _more+1;
+                _smap+=(/^\d*$/.test(el)) ? `[${el}]` : `.${el}`;
+                for(var t =0; t<_paths.length; t++){
+                  _paths[t](_smore, _smap,  (_same)=>{
+                    _path = _same;
+                    pid = t;
+                    id = _more;
+                  });
+                  if(_path) break;
+                }
                 _c++;
 
 
@@ -154,14 +157,14 @@ module.exports = {
               let _path = false;
               var _previo = _tree.slice(-1)[0];
               delete _tree.splice(_c, 1);
-              _map+=(/^\d*$/.test(parent)) ? `[${parent}]` : `.${parent}`;
+              // _map+=(/^\d*$/.test(parent)) ? `[${parent}]` : `.${parent}`;
 
               for(var t =0; t<_paths.length; t++){
                   _paths[t](++_more, _map,  (_same)=>{
                     _path = _same;
                     pid = t;
                     id = _more;
-                    console.log('founded map element ---->', _map);
+                    // console.log('founded map element ---->', _map);
                   });
                   if(_path) break;
                 }
