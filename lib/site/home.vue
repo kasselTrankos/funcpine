@@ -9,8 +9,8 @@
 	  		<h1>{{msg}}</h1>
 	  	</div>
   	</div>
-    <node-string v-if="founded.length>0" :path="founded"/>
-  	<node-map-tree :tree="$data" v-if="data" :path="founded"></node-map-tree>
+    <node-string v-if="founded.length>0" :path="founded" v-on:clickStr="refreshTree"/>
+  	<node-map-tree :tree="$data" v-if="data" :path="founded" :strselected="strselected"></node-map-tree>
   	<node-map-search v-on:inputChanged="refreshSearch" v-if="data"/>
   </div>
 </template>
@@ -64,6 +64,7 @@ module.exports = {
   },
 	data () {
   	return {
+      strselected: {},
   		data: null,
       founded: [[{type:'Object', str:'void'}]],
   		onData: false,
@@ -73,6 +74,10 @@ module.exports = {
   	}
 	},
 	methods: {
+    refreshTree(e){
+      this.strselected = e;
+      //console.log(e);
+    },
 		refreshSearch(value){
       var _this = this;
 			var f = MapNodeFound(value)(this.data, (o)=>{
@@ -81,10 +86,7 @@ module.exports = {
             for(var i =0; i<o.length; i++){
               _paths.push(pathArray(o[i]));
             }
-            ///console.log(_paths);
             _this.founded =  _paths;//pathArray(o[0]);
-  					// getNodeMapped(parentNodeMap(o[0]), (e)=>{
-  					// })(this.data)
   				}
 			 });
 		}
