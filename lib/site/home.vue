@@ -41,7 +41,7 @@
 	  	</div>
       <div class="col-md-2 col-md-offset-1">
         <span type="file" class="btn btn-primary btn-file upload" aria-label="Left center">
-          <input type="file"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Seleccionar JSON
+          <input type="file" v-on:change="onFileChange"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Seleccionar JSON
         </span>
       </div>
   	</div>
@@ -110,6 +110,9 @@ module.exports = {
   	}
 	},
 	methods: {
+    onFileChange(e){
+      console.log(e);
+    },
     refreshTree(e){
       this.strselected = e;
       //console.log(e);
