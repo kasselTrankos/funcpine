@@ -10,6 +10,27 @@
 .upload{
   margin-top: 20px;
 }
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    border: 3px solid red;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    z-index: 1000;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
 </style>
 
 <template>
@@ -19,9 +40,9 @@
 	  		<h1>{{msg}}</h1>
 	  	</div>
       <div class="col-md-2 col-md-offset-1">
-        <button type="button" class="btn btn-primary upload" aria-label="Left center">
-          <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Seleccionar JSON
-        </button>
+        <span type="file" class="btn btn-primary btn-file upload" aria-label="Left center">
+          <input type="file"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Seleccionar JSON
+        </span>
       </div>
   	</div>
     <node-string v-if="founded.length>0" :path="founded" v-on:clickStr="refreshTree"/>
