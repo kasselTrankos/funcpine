@@ -1,13 +1,28 @@
 <style>
-
+.pre-title{
+   background:#DAE1EA;
+}
+.title{
+  font-family: Verdana;
+  color:#2A437F;
+  text-align: center;
+}
+.upload{
+  margin-top: 20px;
+}
 </style>
 
 <template>
   <div  class="row">
-  	<div class="row">
-  		<div class="col-md-8 col-md-offset-4">
+  	<div class="row pre-title">
+  		<div class="col-md-6 col-md-offset-2 title">
 	  		<h1>{{msg}}</h1>
 	  	</div>
+      <div class="col-md-2 col-md-offset-1">
+        <button type="button" class="btn btn-primary upload" aria-label="Left center">
+          <span class="glyphicon glyphicon-file" aria-hidden="true"></span> Seleccionar JSON
+        </button>
+      </div>
   	</div>
     <node-string v-if="founded.length>0" :path="founded" v-on:clickStr="refreshTree"/>
   	<node-map-tree :tree="$data" v-if="data" :path="founded" :strselected="strselected"></node-map-tree>
