@@ -7,7 +7,7 @@
     "babel": "./node_modules/.bin/babel lib/index.js --out-file compiledes6.js",
     "start": "concurrently \"node es2016.js\"  \"node static_server.js\"",
     "compile": "browserify -t vueify -e lib/index.js -o build.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start --no-single-run"
   },
   "repository": {
     "type": "git",
@@ -38,10 +38,14 @@
     "escodegen": "^1.8.1",
     "gojs": "^1.7.15",
     "jsonfile": "^3.0.0",
+    "karma": "^1.7.0",
     "vueify": "^9.4.1"
   },
   "devDependencies": {
     "concurrently": "^3.5.0",
+    "jasmine-core": "^2.6.4",
+    "karma-browserify": "^5.1.1",
+    "karma-jasmine": "^1.1.0",
     "rxjs": "^5.4.1",
     "vue": "^2.3.4",
     "watchify": "^3.9.0"
