@@ -85,6 +85,8 @@ module.exports = {
             let _paths = [];
             for(var i =0; i<o.length; i++){
               _paths.push(pathArray(o[i]));
+              console.log('------------------------------CLEAR----------------------------');
+              // console.log(_paths, ' encontrado en el camino');
             }
             _this.founded =  _paths;//pathArray(o[0]);
   				}

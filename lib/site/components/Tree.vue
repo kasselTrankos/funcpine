@@ -41,6 +41,7 @@
     </div>
 </template>
 <script type="text/babel">
+const {patternToString} = require('./../../pine');
  var idNode = 0, svg,
   _root, g, __this, node, treeData;
 module.exports = {
@@ -76,14 +77,11 @@ module.exports = {
   },
   methods:{
     foundPath(path){
-      let i = 0;
-      let _path = path;
-      return (el, parent, callback)=>{
-        if(_path &&
-          _path[parent] &&
-          el == _path[parent].str 
+      return (parent, map, callback)=>{
+        if(path &&
+          patternToString(path.slice(0, parent)) == map
         ){
-          callback(true, i++);
+          callback(true);
         }
       }
     },
@@ -97,60 +95,82 @@ module.exports = {
         id:_c,
         isPath: (_this.path && _this.path[i].str!='void')
       }];
+
       let _paths = this.path.map((elm)=>_this.foundPath(elm));
       const make = (node, parent, parentId, isPath)=>{
-          (function func(node, parent = null, parentId, isPath, paf='', _more=-1){
+          (function func(node, parent = null,
+            parentId, isPath, paf='', _more=-1, type, _map='')
+          {
 
             if(Object.prototype.toString.call( node ) =='[object Array]' ||
               Object.prototype.toString.call( node ) =='[object Object]'){
               _more++;
+              if(type=='[object Array]') _map+=`[${parent}]`;
+              if(type =='[object Object]') _map+=(_map!='')?`.${parent}`: parent;
+
+              // console.log(_map);
               for(var el in node) {
                 let id = -1, pid = -1;
                 let _path = false;
-                // _paths.map((func, index)=>{
-                //   func(el, (_same, _i)=>{
-                //     _path = _same;
-                //     pid = index;
-                //     id = _i;
-                //     // return false;
-                //   });
-                // });
-                for(var t =0; t<_paths.length; t++){
-                  _paths[t](el, _more,  (_same, _i)=>{
-                    _path = _same;
-                    pid = t;
-                    id = _i;
-                  });
-                  if(_path) break;
-                }
-                _c++;
+                ///using for, i can make break whe is founded
                 let _paf = `${paf}.${_more}`;
-                console.log(_paf);
+                // for(var t =0; t<_paths.length; t++){
+                //   _paths[t](_more, _map,  (_same)=>{
+                //     _path = _same;
+                //     pid = t;
+                //     id = _more;
+                //     console.log(`founded map object or array ---->${_map}------${el}----${_more}`);
+                //   });
+                //   if(_path) break;
+                // }
+                _c++;
+
+
                 _tree.push({
-                  id: _c, 
+                  id: _c,
                   paf: _paf,
-                  parentId: parentId, 
-                  isPath: _path,  
-                  realname: el, 
-                  name:el, 
+                  parentId: parentId,
+                  isPath: _path,
+                  realname: el,
+                  name:el,
                   parent: parent,
                   str:{
                     id: id,
                     parent: pid
                   }
                 });
-                func(node[el], el, _c, _path, _paf, _more);
+                func(node[el],
+                  el,
+                  _c,
+                  _path,
+                  _paf,
+                  _more,
+                  Object.prototype.toString.call( node ),
+                  _map);
               }
 
             }else{
               //hereda el padre
+              let _path = false;
               var _previo = _tree.slice(-1)[0];
               delete _tree.splice(_c, 1);
+              _map+=(/^\d*$/.test(parent)) ? `[${parent}]` : `.${parent}`;
+
+              for(var t =0; t<_paths.length; t++){
+                  _paths[t](++_more, _map,  (_same)=>{
+                    _path = _same;
+                    pid = t;
+                    id = _more;
+                    console.log('founded map element ---->', _map);
+                  });
+                  if(_path) break;
+                }
+                console.log(`--${_path}---${_previo.isPath}---${_more}----------${_map}-----${parent}-`);
               _tree.push({
                 id: _previo.id,
                 realname: parent,
                 paf: _previo.paf,
-                isPath: _previo.isPath,
+                isPath: _path,
                 parentId: _previo.parentId,
                 str: _previo.str,
                 name:`${parent}:${node}`,
@@ -171,7 +191,7 @@ module.exports = {
         .data( nodes.descendants().slice(1))
         .remove();
       _root =  __this.setMenu(__this.tree.data);
-      console.log(JSON.stringify(_root));
+      // console.log(JSON.stringify(_root));
       treeData = d3.stratify()
         .id(function(d) { return d.id; })
         .parentId(function(d) { return d.parentId; })
@@ -231,9 +251,9 @@ module.exports = {
         .style("text-anchor", function(d) {
           return d.children ? "end" : "start"; })
         .text(function(d) { return d.data.name; })
-        .filter((d)=> (__this.strselected && 
-          d.data.str && 
-          d.data.str.id>=0 && 
+        .filter((d)=> (__this.strselected &&
+          d.data.str &&
+          d.data.str.id>=0 &&
           __this.strselected.id===d.data.str.id &&
           __this.strselected.parent===d.data.str.parent))
         .transition()
