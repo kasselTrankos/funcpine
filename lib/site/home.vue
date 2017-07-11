@@ -7,7 +7,7 @@
   color:#2A437F;
   text-align: center;
 }
-.upload{
+.upload, .remove{
   margin-top: 20px;
 }
 .btn-file {
@@ -43,7 +43,7 @@
         <span type="file" class="btn btn-primary btn-file upload" aria-label="Left center" v-if="!file">
           <input type="file" v-on:change="onFileChange"  accept=".json"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Seleccionar JSON
         </span>
-        <span type="file" class="btn btn-danger" aria-label="Left center" v-if="file" v-on:click="file=false;">
+        <span type="file" class="btn btn-danger remove" aria-label="Left center" v-if="file" v-on:click="file=false;">
           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  {{file}}
         </span>
       </div>

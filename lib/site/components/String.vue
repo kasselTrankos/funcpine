@@ -1,5 +1,6 @@
 <style>
   .founded{
+    margin: 10px 0;
     text-align: center;
     display:inline-block;
     width: 100%;
