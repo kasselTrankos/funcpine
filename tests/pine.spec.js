@@ -1,4 +1,6 @@
-import {patternToString} from './../lib/pine';
+import {patternToString,
+	parentNodeMap,
+	childAtNodeMap} from './../lib/pine';
 describe('method patternToString', ()=>{
 	it('Given a pattern with valid format', ()=>{
 		let valid = [{
@@ -21,5 +23,17 @@ describe('method patternToString', ()=>{
 		}];
 		expect(patternToString(valid)).toBe('');
 	});
-
 });
+describe('method parentNodeMap', ()=>{
+	it('Given a pattern with a valid format', ()=>{
+		let valid = '[0].model.archivo[111].id';
+		expect(parentNodeMap(valid)).toBe('[0].model.archivo[111]');
+	});
+});
+describe('method childAtNodeMap', ()=>{
+	it('Given a pattern with a valid format', ()=>{
+		let valid = '[0].model.archivo[111].id';
+		expect(childAtNodeMap(1)(valid)).toBe('[0].model');
+	});
+});
+
