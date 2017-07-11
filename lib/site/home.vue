@@ -66,7 +66,7 @@ module.exports = {
   	return {
       strselected: {},
   		data: null,
-      founded: [[{type:'Object', str:'void'}]],
+      founded: [],
   		onData: false,
     		msg: 'Func Pine',
     		searched: false,
@@ -80,17 +80,17 @@ module.exports = {
     },
 		refreshSearch(value){
       var _this = this;
+      let _paths = [];
 			var f = MapNodeFound(value)(this.data, (o)=>{
   				if(o.length>0){
-            let _paths = [];
             for(var i =0; i<o.length; i++){
               _paths.push(pathArray(o[i]));
-              console.log('------------------------------CLEAR----------------------------');
+              // console.log('------------------------------CLEAR----------------------------');
               // console.log(_paths, ' encontrado en el camino');
             }
-            _this.founded =  _paths;//pathArray(o[0]);
   				}
 			 });
+      _this.founded =  _paths;//pathArray(o[0]);
 		}
 	}
 }

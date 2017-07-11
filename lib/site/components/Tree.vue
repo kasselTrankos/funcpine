@@ -89,32 +89,30 @@ module.exports = {
     setMenu(tree) {
       var _this = this;
       let i = 0, _c = 0, _m=0;
+
       var _tree = [{
         name: "root",
         parent: null,
         parentId:'',
         id:_c,
-        isPath: (_this.path && _this.path[i].str!='void')
+        isPath: false
       }];
 
       let _paths = this.path.map((elm)=>_this.foundPath(elm));
-      const make = (node, parent, parentId, isPath)=>{
+      const make = (node, parent, parentId)=>{
           (function func(node, parent = null,
-            parentId, isPath, paf='', _more=-1, type, _map='')
+            parentId, _more=-1, type, _map='')
           {
             if(type=='[object Array]') _map+=`[${parent}]`;
             if(type =='[object Object]') _map+=(_map!='')?`.${parent}`: parent;
             if(Object.prototype.toString.call( node ) =='[object Array]' ||
               Object.prototype.toString.call( node ) =='[object Object]'){
               _more++;
-
-
               // console.log(_map);
               for(var el in node) {
                 let id = -1, pid = -1;
                 let _path = false;
                 ///using for, i can make break whe is founded
-                let _paf = `${paf}.${_more}`;
                 var _smap= _map;
                 var _smore = _more+1;
                 _smap+=(/^\d*$/.test(el)) ? `[${el}]` : `.${el}`;
@@ -131,7 +129,6 @@ module.exports = {
 
                 _tree.push({
                   id: _c,
-                  paf: _paf,
                   parentId: parentId,
                   isPath: _path,
                   realname: el,
@@ -145,8 +142,6 @@ module.exports = {
                 func(node[el],
                   el,
                   _c,
-                  _path,
-                  _paf,
                   _more,
                   Object.prototype.toString.call( node ),
                   _map);
@@ -157,22 +152,18 @@ module.exports = {
               let _path = false;
               var _previo = _tree.slice(-1)[0];
               delete _tree.splice(_c, 1);
-              // _map+=(/^\d*$/.test(parent)) ? `[${parent}]` : `.${parent}`;
 
               for(var t =0; t<_paths.length; t++){
                   _paths[t](++_more, _map,  (_same)=>{
                     _path = _same;
                     pid = t;
                     id = _more;
-                    // console.log('founded map element ---->', _map);
                   });
                   if(_path) break;
                 }
-                console.log(`--${_path}---${_previo.isPath}---${_more}----------${_map}-----${parent}-`);
               _tree.push({
                 id: _previo.id,
                 realname: parent,
-                paf: _previo.paf,
                 isPath: _path,
                 parentId: _previo.parentId,
                 str: _previo.str,
