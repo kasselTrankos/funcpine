@@ -5,11 +5,11 @@
   "user_user": [
     {
       "id": "1",
-      "domain": "http://google.com/"
+      "otherdomain": "uri"
     },
     {
       "id": "34",
-      "domain": "http://so.com/",
+      "domain": "uri",
       "fav_colors": [
         "red",
         "yellow"
@@ -17,7 +17,7 @@
     },
     {
       "id": "42",
-      "domain": "http://ww.com/",
+      "domain": "uri",
       "fav_colors": [
         "black",
         "green"
