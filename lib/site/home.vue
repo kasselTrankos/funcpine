@@ -71,7 +71,7 @@
   		<div class="col-md-6 col-md-offset-2 title">
 	  		<h1>{{msg}}</h1>
 	  	</div>
-      <div class="menu" v-on:mouseover="menuShow=true" v-on:mouseout="menuShow=false">
+      <div class="menu" v-on:mouseover="stopPropagation;menuShow=true" v-on:mouseout="stopPropagation;menuShow=false">
         <transition name="slide-fade">
         <div v-if="menuShow">
           <div class="form-group  col-md-8 urlfile" v-if="!isFile">
@@ -173,8 +173,8 @@ module.exports = {
   	}
 	},
 	methods: {
-    Show(e){
-      console.log(e);
+    stopPropagation(e){
+      e.stopImmediatePropagation();
     },
     Hide(e){
       console.log(e);
