@@ -24,5 +24,5 @@ Then in the input write your match and it match then redraw the tree with the pa
 The json loaded is in /demo/file.json, and you can change content for any other json code.
 
 
-Make rollover in header for show  the form to load diferent JSON, from local or ronline.
+Make rollover in header for show the form that's load diferent JSON, from local or online.
 

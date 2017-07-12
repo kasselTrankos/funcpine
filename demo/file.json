@@ -1,33 +1,26 @@
-[
-  {
-    "id":"a",
-    "buscar":{
-      "result": "alto",
-      "demo":[
-        {"id":1}
-      ]
+{
+  "c0" : {
+    "id" : "10361933538968625948563862883530253876",
+    "code" : "CP17067SYKKFS2",
+    "c1" : null,
+    "c3" : {
+      "id" : 1,
+      "name" : "[ES] En recepción"
     },
-    "other":3,
-    "mas":{
-      "other":"a",
-      "id":"a",
-      "tres":{
-        "data":[
-          {"hola":"lemon"},
-          {"id":"a"}
-
-        ]
-      },
-      "mas": {
-        "id":"a"
+    "c4" : {
+      "id" : "30072791960600547841011210937118447555",
+      "c5" : {
+        "id" : 1
       }
-    }
+    },
+    "entryType" : {
+      "id" : 1
+    },
+    "interactionDate" : "2017-06-21T15:57:15.918+0000",
+    "proceed" : true,
+    "reopenedCPNumber" : 0,
+    "targetDate" : "2017-06-21T16:17:12.210+0000"
   },
-  {
-    "alone":"a",
-    "jamon":["a", "lemon"],
-    "other":[{
-      "id":"a"
-    }]
-  }
-]
+  "t0" : null,
+  "t1" : null
+}
