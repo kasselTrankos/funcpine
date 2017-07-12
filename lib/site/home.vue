@@ -1,6 +1,28 @@
 <style>
 .pre-title{
    background:#DAE1EA;
+   position: relative;
+}
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for <2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+.menu {
+  /*opacity: 0;
+  filter: alpha(opacity=0);*/
+  position: absolute;
+  z-index: 100;
+  margin-left:5%;
+  width: 90%;
+  /*background: red;*/
+  height: 100%;
 }
 .title{
   font-family: Verdana;
@@ -19,11 +41,10 @@
   float: left;
   margin-top:24px;
   margin-left: 5px;
-  // display: table-cell;
 }
 .middle input{
   display: table-row;
-  
+
 }
 .btn-file input[type=file] {
     position: absolute;
@@ -50,22 +71,23 @@
   		<div class="col-md-6 col-md-offset-2 title">
 	  		<h1>{{msg}}</h1>
 	  	</div>
-      <div class="col-md-3 col-md-offset-1">
-
-        <span type="file" class="btn btn-primary btn-file upload" aria-label="Left center" v-if="!file && isFile">
-          <input type="file" v-on:change="onFileChange"  accept=".json" /><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Seleccionar JSON
-        </span>
-        <span type="file" class="btn btn-danger remove" aria-label="Left center" v-if="file && isFile" v-on:click="file=false;">
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  {{file}}
-        </span>
-        <div class="form-group urlfile" v-if="!isFile">
-          <input type="text" v-on:input="onChange" 
-          class="form-control col-md-4  " id="searching" 
-          placeholder="Escribe un nodo o número" />
+      <div class="menu" v-on:mouseover="menuShow=true" v-on:mouseout="menuShow=false">
+        <transition name="slide-fade">
+        <div v-if="menuShow">
+          <div class="form-group  col-md-8 urlfile" v-if="!isFile">
+            <input type="text" v-on:input="onChange"
+            class="form-control " id="searching"
+            placeholder="Introduce URL de un json válido" />
+          </div>
+          <h2 class="col-md-1">o´</h2>
+          <span type="file" class="btn btn-primary btn-file upload" aria-label="Left center" v-if="!file">
+            <input type="file" v-on:change="onFileChange"  accept=".json" /><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Elige tu JSON
+          </span>
+          <span type="file" class="btn btn-danger remove" aria-label="Left center" v-if="file" v-on:click="file=false;">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>  {{file}}
+          </span>
         </div>
-       <label class="form-check-label middle">
-        <input class="form-check-input" type="checkbox" v-model="isFile" />
-        </label>
+        </transition>
       </div>
   	</div>
     <node-string v-if="founded.length>0" :path="founded" v-on:clickStr="refreshTree"/>
@@ -93,7 +115,7 @@ module.exports = {
     req.open('GET', './../demo/file.json');
     req.send();
     const requestStream = Rx.Observable.create((observer) => {
-      
+
       req.onload = () => {
         if (req.status == 200) {
           observer.next(JSON.parse(req.response));
@@ -105,7 +127,7 @@ module.exports = {
       req.onerror = () => {
         observer.error(new Error("Unkown Error"));
       }
-      
+
     });
     const requestJSON = Rx.Observable.create((observer)=>{
       reader.onload = (e)=> {
@@ -138,6 +160,7 @@ module.exports = {
   },
 	data () {
   	return {
+      menuShow: false,
       isFile: false,
       strselected: {},
       file: false,
@@ -150,6 +173,12 @@ module.exports = {
   	}
 	},
 	methods: {
+    Show(e){
+      console.log(e);
+    },
+    Hide(e){
+      console.log(e);
+    },
     onChange(e){
       this.data = false;
       req.open('GET', e.target.value);
@@ -157,7 +186,7 @@ module.exports = {
     },
     onFileChange(e){
       this.data = false;
-      this.file = e.target.files[0].name; 
+      this.file = e.target.files[0].name;
 
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         reader.readAsText(e.target.files[0]);
